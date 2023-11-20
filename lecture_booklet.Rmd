@@ -1,0 +1,31 @@
+---
+title: "Basic datamanagment with R"
+output: html_notebook
+---
+
+# Basic data management with R
+
+Welcome to this R course on basic data management with R. Before proceeding this course we advise you to first get familiar with R-Studio (or what ever IDE you are using) and the usage of R-markdown-notebooks.
+
+## Loading packages and data
+
+We are starting with loading the data we want to work with into R. Data could be stored in different kinds of formats. For the majority of common formats there are simple solutions to import that data.\
+As an example we want to use a `csv file` which stores data about movies including the name, genre, rating and a lot more. We can import the file with the function `read.csv()` and give it the name `raw_data`.
+
+```{r}
+raw_data = read.csv("movies.csv")
+```
+
+> Something that could cause trouble using `csv files`, is the different usage of separators. The international standard is using `,` to separate values from each other. Since commas are used in Germany to write decimals, 'german' `csv-files` use `;` to separate the values.
+
+If we
+
+```{r}
+raw_data
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
