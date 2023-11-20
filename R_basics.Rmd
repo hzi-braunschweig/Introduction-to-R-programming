@@ -1,0 +1,142 @@
+---
+title: "R Basics"
+output: html_notebook
+---
+
+# The Basics of R
+
+Welcome to this introduction course to the programming language **R**. This course is dedicated to persons with very few or none experience in any programming language and aims to teach the basic concepts of programming in general and **R** specific topics. Those who are more familiar with programming and who are just interested in an introduction in the syntax of **R** might quickly go through this course.
+
+## The Usage of this Notebook
+
+We will use [**R Markdown**](http://rmarkdown.rstudio.com) **Notebooks** as a mean of teaching for this course. In general these notebooks consists of two different things.\
+On the one hand it consists of text blocks, like the one you are reading right now. They explain motivation, concepts and give background information for the things we are discussing.\
+On the other hand we have code chunks. These are areas where you can write and execute code. You can execute each chunk by clicking the *Run* button on the right side within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. Have a try with the chunk below:
+
+```{r}
+print("Hello world!")
+```
+
+Congratulations you have executed your first line of code (hopefully successful)! Of course this is a rather small code, but the first step is done. Each chunk can include more than just one line of code. If you are interested in executing just one line you can place your cursor in that particular line and press *Ctrl + Enter.*
+
+```{r}
+
+print("Hello world!")
+print("Hello user!")
+```
+
+However we recommend to limit the number of lines of code for a better understanding.
+
+We will use these code chunks to give executable examples and give the opportunity to play a bit around. Usually coding on your own and/or playing around with some code is the best way to become good at programming, therefore we highly recommend doing it.\
+From time to time we will use the code chunks for small, not to complex, exercises.
+
+We hope you are now well prepared to follow and enjoy the upcoming course.
+
+## First Steps
+
+As mentioned
+
+### The Basics
+
+The most simple usage of a programming language such as **R** is to use it as a calculator:
+
+```{r}
+1+1
+```
+
+```{r}
+1+2+3+4+5+6+7+8+9
+```
+
+Sometime we want to reuse a answer that was already calculated or we want to save this value for some other purpose. We can simply to this by assigning the value via `<-` (short: *Alt+-*):
+
+```{r}
+a <- 3.14
+print(a)
+```
+
+### Naming variables
+
+When choosing a name for a variable we have to follow some official rules:
+
+-   The name can only consist of letters, digits, period(.) and underscore(\_)
+
+-   The name has to start with a letter or a period(.). If we start with a period, it cannot be followed by a digit.
+
+-   Some names are reserved are must not be used (`TRUE`, `FALSE`, `NULL`, `if`...)
+
+-   Names are case-sensitive, meaning that `test`, `Test` and `TEST`are three different variables
+
+Violating these rules results in an error message:
+
+```{r}
+1A <- 123
+.1A <- 123
+TRUE <- "Hello world!"
+```
+
+Asides of these strict rules we emphasize to try and give short and self-explaining names to your variables. This makes it easier for others and your(-future-)self to understand what each variable means.
+
+```{r}
+a <- 1+2+3+4+5+6
+b <- a/6
+print(b)
+```
+
+```{r}
+sum <- 1+2+3+4+5+6
+average <- sum/6
+print(average)
+```
+
+### Special values
+
+We have mentioned some special values in **R** that we are not allowed to override with a variable we will explain some of these values now in some detail.
+
+-   `NULL`
+
+-   `NA`
+
+-   `NaN`
+
+-   `Inf`
+
+### Data types and structures in R
+
+First of all we introduce the basic data types that exist in **R**
+
+-   **logical**: `TRUE`, `FALSE`
+-   **character**: `"a"`, `hzi`
+-   **numeric**: `1`, `3.14`
+-   **integer**: `2L` (the `L` marks an integer in **R**)
+-   **complex**: `2+4i`, `0.5-0.1i` We can determine the type of something by `typeof()`
+
+```{r}
+typeof(TRUE)
+typeof("a")
+typeof(1)
+typeof(2L)
+typeof(2+4i)
+```
+
+We will later face other types of data, which are derived from these basic types.\
+
+## Logic
+
+## Loops
+
+## R Markdown Auto Text
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
