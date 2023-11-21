@@ -1,6 +1,10 @@
 ---
 title: "R Basics"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
 ---
 
 # The Basics of R
@@ -34,7 +38,7 @@ We hope you are now well prepared to follow and enjoy the upcoming course.
 
 ## First Steps
 
-As mentioned
+As mentioned we start with the very basic aspects of **R**.
 
 ### The Basics
 
@@ -52,7 +56,16 @@ Sometime we want to reuse a answer that was already calculated or we want to sav
 
 ```{r}
 a <- 3.14
-print(a)
+a
+```
+
+Of course we can use the variables itself to do calculations
+
+```{r}
+a <- 2
+b <- 3
+a+b
+a*b
 ```
 
 ### Naming variables
@@ -80,26 +93,23 @@ Asides of these strict rules we emphasize to try and give short and self-explain
 ```{r}
 a <- 1+2+3+4+5+6
 b <- a/6
-print(b)
+b
 ```
 
 ```{r}
 sum <- 1+2+3+4+5+6
 average <- sum/6
-print(average)
+average
 ```
 
 ### Special values
 
 We have mentioned some special values in **R** that we are not allowed to override with a variable we will explain some of these values now in some detail.
 
--   `NULL`
-
--   `NA`
-
--   `NaN`
-
--   `Inf`
+-   `NULL` marks something that is a undefined value.
+-   `NA` is an indicator for a missing value.
+-   `NaN` stands for 'Not a Number' and appears for undefined numerical values such as $\log(-1)$.
+-   `Inf/-Inf` stands for 'Infinity' and marks verly large values or results of division by zero and vice versa for `-Inf` .
 
 ### Data types and structures in R
 
@@ -109,7 +119,7 @@ First of all we introduce the basic data types that exist in **R**
 -   **character**: `"a"`, `hzi`
 -   **numeric**: `1`, `3.14`
 -   **integer**: `2L` (the `L` marks an integer in **R**)
--   **complex**: `2+4i`, `0.5-0.1i` We can determine the type of something by `typeof()`
+-   **complex**: `2+4i`, `0.5-0.1i` In general we call something of undetermined type an object. We can determine the type of an object by `typeof()`.
 
 ```{r}
 typeof(TRUE)
@@ -119,7 +129,183 @@ typeof(2L)
 typeof(2+4i)
 ```
 
+To get the data type and the value of an object we can use `str()`.
+
+```{r}
+str(TRUE)
+str("a")
+str(1)
+str(2L)
+str(2+4i)
+```
+
 We will later face other types of data, which are derived from these basic types.\
+
+In reality we are often interested in more than one value but in a whole set of values, therefore we need a way to store them.
+
+#### Vectors
+
+A vector is the most common and basic data structure in **R** and resembles something like a set of elements. A vector consists of elements of only one data type and in general could be created by `vector()`.
+
+```{r}
+vector()
+```
+
+By default this results in a `logical` vector of length zero. We can determine the type and the length of a vector by the *arguments* `mode` and `length`.
+
+```{r}
+vector(mode = "character", length = 3)
+```
+
+We can shorten this by using `logical()`, `character()`, `numeric()`, etc. and just giving the desired length.
+
+```{r}
+numeric(length = 3)
+```
+
+As we see these vectors are rather boring. That is because creating vectors this way results in 'empty' vectors with default values (`0` for `numeric`, `TRUE` for `logical`, etc.). Alternatively we can create vectors by specifying their content. We do this by `c()` and listing the content between the parentheses.
+
+```{r}
+c(1,2,3)
+c(TRUE, FALSE, TRUE)
+c("Bernard", "Henrik", "Basil", "Christin", "Anja")
+```
+
+From time to time we will face vectors of unknown datatype and/or length. We could examine these properties with `typeof()`and `length()`.
+
+```{r}
+v <- c(TRUE, FALSE, FALSE, TRUE, TRUE)
+typeof(v)
+length(v)
+```
+
+As before we can get both these information together using `str()`.
+
+```{r}
+str(v)
+```
+
+After creating a vector we might come to the point where we want to add some value to the vector. For that purpose we could also use `c()` (originally that is what `c()` should to as it stands for *combine*).
+
+```{r}
+m <- c("Athos", "Porthos")
+m
+
+m <- c(m, "Aramis")
+m
+
+M <- c("D'Artagan", m)
+M
+```
+
+One kind of vector which is used quite often is the sequence of numbers. Since typing those into `c()` could take some time and is not very efficient, we have simpler ways to create them. In general we could use `seq()` with arguments `from`, `to` and `by` to determine the start, end and step size.
+
+```{r}
+seq(from = 2, to = 10, by = 0.5)
+```
+
+Often we are interested in the natural numbers in an interval.
+
+```{r}
+seq(2,10)
+2:10
+```
+
+We can access the elements stored in a vector by the name of the vector followed by the position of the element in brackets (starting with position 1).
+
+```{r}
+names <- c("jupiter", "peter", "bob")
+names[1]
+names[2:3]
+```
+
+We can also change certain values this way.
+
+```{r}
+names[1] <- "justus"
+names
+```
+
+When we derive a vector out of data we have imported we might face the the situation that some entries in our vector are missing. As discussed before these entries are marked by `NA`.
+
+```{r}
+v <- c(1,2,NA,4,5,NA)
+v
+```
+
+We can examine if and where a given vector has missing entries by calling the function `is.na()`. Applying this function results in a logical vector of the same length, indicating if an entry is `NA` or not.
+
+```{r}
+is.na(v)
+```
+
+If we just want to know if any of the entries is missing we can call `anyNA()`.
+
+```{r}
+anyNA(c(1,2,3,4))
+anyNA(c(1,NA,3,4))
+```
+
+At the beginning we mentioned that a vector only contains objects of one data type, but what happens if we try to implement a vector consisting of different data types.
+
+```{r}
+c(1,TRUE, 1+1i, "A")
+```
+
+#### Data Frames
+
+As seen vectors are one-dimensional and consist only of one type of data they are limited in their usability. To complete this disadvantage we could imagine taking multiple vectors and combining them into a new data structure. **R** calls this structure a *Data Frame*. We can create a data frame by hand using `data.frame()` and use as arguments the vectors.
+
+```{r}
+data.frame(c("a","b","c","d"), c(1,2,3,4), c(TRUE, FALSE, FALSE, TRUE))
+```
+
+As we can see the names of the columns are not very understandable or usable. It is therefore almost always a good idea to give the columns sensible names.
+
+```{r}
+data.frame(id = c("a","b","c","d"), x = c(1,2,3,4), truth = c(TRUE, FALSE, FALSE, TRUE))
+```
+
+When creating a data frame we have to keep in mind, that all vectors have to have the same length. If that is not the case one possible solution is to use `NA` to fill up the needed space in a vector.
+
+```{r}
+data.frame(id = c("a","b","c"), x = c(1,2))
+data.frame(id = c("a","b","c"), x = c(1,2,NA))
+```
+
+Similar to a vector we have a number of functions we could use to examine the structure of a given data frame
+
+-   `dim()` returns the dimension of the data frame (i.e. the number of rows and number of columns)
+-   `nrow()` gives the number of rows
+-   `ncol()` gives the number of columns
+-   `str()` shows the structure of the whole data frame similar to before
+-   `names()` or `colnames()` both returns the names for the data frame
+
+```{r}
+dim(iris)
+str(iris)
+names(iris)
+```
+
+Sometimes we want to have a look into the data without displaying all of it (especially if the data frame has a lot of rows). In that case we can use `head()` to show the first 6 rows of the data frame and `tail()` to show the last 6 rows of the data frame.
+
+```{r}
+head(iris)
+```
+
+If we want to access some of the data in a given data frame we have different options.
+
+```{r}
+df <- data.frame(name = c("Geralt", "Yennefer", "Julian", "Fiona", "Gaunter"), 
+                 height = c("1.9", "1.75", "1.8","1.72","1.85"), 
+                 hair = c("white", "black", "brown", "white", NA))
+df
+df[1,2]
+df[1,]
+df[,2]
+df["height"]
+df$height
+```
 
 ## Logic
 
