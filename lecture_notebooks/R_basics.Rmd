@@ -219,6 +219,15 @@ names[1]
 names[2:3]
 ```
 
+Another way to access values in given vector is by using a logical vector of the same length with `TRUE` at the positions we want to access.
+
+```{r}
+v <- c(1,2,3,4,5,6)
+l <- c(FALSE,TRUE,TRUE,FALSE,TRUE,FALSE)
+v[l]
+
+```
+
 We can also change certain values this way.
 
 ```{r}
