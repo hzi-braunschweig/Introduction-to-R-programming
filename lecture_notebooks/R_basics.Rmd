@@ -219,6 +219,14 @@ names[1]
 names[2:3]
 ```
 
+Sometimes we are interested in all but some values of a vector. We can indicate the positions we do not want to access via a preceding `-`.
+
+```{r}
+x <-c("a", "b", "c", "d")
+x[-2]
+x[-c(2,4)]
+```
+
 Another way to access values in given vector is by using a logical vector of the same length with `TRUE` at the positions we want to access.
 
 ```{r}
@@ -272,7 +280,7 @@ data.frame(c("a","b","c","d"), c(1,2,3,4), c(TRUE, FALSE, FALSE, TRUE))
 As we can see the names of the columns are not very understandable or usable. It is therefore almost always a good idea to give the columns sensible names.
 
 ```{r}
-data.frame(id = c("a","b","c","d"), x = c(1,2,3,4), truth = c(TRUE, FALSE, FALSE, TRUE))
+data.frame(id = c("a","b","c","d"), x = c(1,2,3,4), exposure = c(TRUE, FALSE, FALSE, TRUE))
 ```
 
 When creating a data frame we have to keep in mind, that all vectors have to have the same length. If that is not the case one possible solution is to use `NA` to fill up the needed space in a vector.
@@ -312,13 +320,156 @@ df
 df[1,2]
 df[1,]
 df[,2]
-df["height"]
 df$height
+df[c("name","height")]
+```
+
+As before we could use logical vectors to access the entries of certain rows and columns.
+
+```{r}
+df[c(TRUE,TRUE,FALSE,TRUE,FALSE),c(TRUE,FALSE,TRUE)]
 ```
 
 ## Logic
 
+We are now looking at an aspect that is part of the majority of programming languages and of course also part of **R**. We have already introduced logical vectors without explaining what the entries `TRUE` and `FALSE` mean and do. Both are the basic logical values in **R** that come up when checking objects or comparing them to each other.
+
+```{r}
+5 > 4
+4 > 5
+```
+
+The basic logical operators are:
+
+-   `<` greater than
+-   `<=` greater or equal than
+-   `>` smaller than
+-   `>=` smaller or equal than
+-   `==` equal to
+-   `!=` not equal to
+
+Most of them do what we would intuitively think they do. The exception to this is the equal operator. We have to remember to use two equal signs instead of one. If you just one equal sign you try to assign a value to an object.
+
+```{r}
+x = 5
+x == 5
+
+5 = x
+5 == x
+```
+
+In many situations we want more complex conditions as the ones presented above. We can combine logical conditions using `&` (and), `|`(or) and `!`(not) for that.
+
+```{r}
+is.numeric(x) & (x < 10)
+!is.character(x)
+```
+
+### Logic and vectors
+
+In **R** we can easily compare the elements of a vector via a logical operator.
+
+```{r}
+v <- c(-1,0,1,2)
+
+v < 2
+```
+
+There are some useful operators when checking a condition for vectors of unknown length.
+
+-   `any()` returns `TRUE` if any element fulfills the condition.
+-   `all()` returns `TRUE` if all elements fulfill the condition.
+-   `%in%` returns `TRUE` if any element is in the following vector.
+
+```{r}
+any(v <= 0)
+all(v <= 0)
+v %in% c(-1,1)
+```
+
+The neat thing about these element wise operations in **R** is that the resulting logical vector can be used to get access to the elements of the given vector that satisfied the condition.
+
+```{r}
+x <- seq(-5,5,1)
+x <=0
+x[x <= 0]
+x[abs(x) >= 4]
+```
+
+### Dealing with missing values
+
+One thing that has always to be kept in mind is that comparing `NA` with other values results in `NA` which can lead to unintended things.
+
+```{r}
+NA > 0
+x <- c(1, -2, NA, 3)
+
+x[x > 0]
+```
+
+Keeping this in mind allows us to counter these unintended cases.
+
+```{r}
+x[!is.na(x) & (x > 0)]
+```
+
+### If-Else-Statements
+
+The most common use of logical conditions in the majority of programming languages (**R** is to some extend a exception) is to link the execution of parts of code to certain conditions. For example taking the logarithm `log()` of a given number only makes sense if the given number is greater than zero and results in an error otherwise.\
+We implement this with `if` followed by the determining condition in `()` and following that the block of code we want to be executed if the condition is fulfilled in `{}`.
+
+```{r}
+x <- -2
+
+if (x > 0) {log(x)}
+```
+
+In most situations it makes sense to execute some alternative code if the condition fails and be it a message that the conditions are not fulfilled. We can do this by adding `else` after the curly bracket followed by the alternative code in `{}` behind.
+
+```{r}
+x <- -2
+
+if (x > 0) {
+  log(x)
+} else {
+  print("x is not greater than 0!")
+}
+```
+
+Using `if` and `else` allows us to distinguish between two cases, either a condition is satisfied or not. Some situations require a more sophisticated distinction of cases. To tackle that issue we could either but a new `if` statement inside the executed code or we could use a more elegant way the `else if` statement. Like `else` it is put behind the `{}` of the preceding statement, but adds a new condition which must be met before executing the following code.
+
+```{r}
+x <-  2
+
+if (x > 0) {
+  print("x is positive")
+} else if (x < 0) {
+  print("x is negative")
+} else {
+  print("x is neither positve nor negative")
+}
+
+```
+
 ## Loops
+
+### For loop
+
+### While loop
+
+### Alternative
+
+## Functions
+
+## Getting help
+
+### R help
+
+```{r}
+?print
+```
+ 
+
 
 ## R Markdown Auto Text
 
