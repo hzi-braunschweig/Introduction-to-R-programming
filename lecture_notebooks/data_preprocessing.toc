@@ -1,0 +1,5 @@
+\contentsline {section}{\numberline {1}Loading packages and data into R}{2}{section.1}
+\contentsline {subsection}{\numberline {1.1}Loading packages}{2}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Loading data}{2}{subsection.1.2}
+\contentsline {section}{\numberline {2}Cleaning and transforming data}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Cleaning strings}{3}{subsection.2.1}

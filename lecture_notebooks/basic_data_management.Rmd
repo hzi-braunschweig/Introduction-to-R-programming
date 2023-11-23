@@ -1,11 +1,15 @@
 ---
 title: "Basic datamanagment with R"
-output: html_notebook
+output:
+  html_notebook: default
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
 
 # Basic data management with R
 
-Welcome to this R course on basic data management with R. Before proceeding this course we advise you to first get familiar with R-Studio (or what ever IDE you are using) and the usage of R-markdown-notebooks.
+Welcome to this R course on basic data management with R. Before proceeding this course we advise you to first get familiar with R-Studio (or what ever IDE you are using) and the usage of R-markdown-notebooks. 
 
 ## Loading packages and data
 
