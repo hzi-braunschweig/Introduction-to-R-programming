@@ -1,0 +1,108 @@
+%\documentclass{article}
+\documentclass[a4paper]{article}
+
+\usepackage{hyperref}
+\usepackage{float} 
+\usepackage{adjustbox}
+\usepackage{pdfpages}
+\usepackage{xurl}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=1.5cm}
+
+
+
+
+\title{Introduction to R programming: Data preprocessing}
+\author{Bernard Silenou$^1$ and Henrik Schanze$^1$}
+\date{%
+    $^{1}$Department of Epidemiology, Helmholtz Centre for Infection Research, Braunschweig, Germany\\%
+   % $^2$Organization 2\\[2ex]%
+   \vspace{2em}
+    \today
+}
+\begin{document}
+
+\maketitle
+\vfill
+\tableofcontents
+\clearpage
+
+<<useful_links, echo=FALSE, eval=TRUE, results='hide'>>=
+# knitr chunk options are found here https://yihui.org/knitr/options/
+@
+
+\noindent Welcome to this R course on basic data management with R. Before proceeding this course we advise you to first get familiar with R-Studio (or what ever IDE you are using) and the usage of R-markdown-notebooks. These prerequisite are covered in the chapter of the course called "Basic R".
+
+\section{Loading packages and data into R}
+\subsection*{Goals}
+\begin{itemize}
+\item 
+\item blabla
+\end{itemize}
+
+\noindent We are starting with loading the data we want to work with into R. Data could be stored in different kinds of formats. For the majority of common formats there are simple solutions to import that data.\\
+As an example we want to use a \textit{csv} file which stores data about movies including the name, genre, rating and a lot more. We can import the file with the function \texttt{read.csv} and give it the name  \textit{raw\_data}.
+
+\subsection{Loading packages}
+Before loading a package to  your current R session, the package needs to already be installed to your computer. Use the command \textit{install.packages} to install a package and \texttt{library} to load a package. The RStudio IDE provides an option to search and install  package. 
+
+<<loading_packages, eval=FALSE>>=
+install.packages("MASS")
+library(MASS)
+
+@
+
+\noindent The command install.packages would install the needed package from the default R repository called CRAN. If the package that you wish to install in not on CRAN, you would need to search for the repository hosting the package, download the tar.gz file and install it.
+
+\subsection{Loading data}
+% though read.table or other methods
+% through Rstudio wizard
+<<loading_data, eval=TRUE, echo=TRUE>>=
+setwd("~/Introduction-to-R-programming/lecture_notebooks")
+dataMovies = read.csv("./data/movies.csv") 
+@
+\noindent \texttt{.} in the file path represents the current working directory and  can be printed using \texttt{getwd()} command.
+
+<<Formatting_data, eval=TRUE, echo=F, results='hide'>>=
+dataMovies$drugUse = sample(c("Yes", "No"), 
+                       size = nrow(dataMovies), replace = T) 
+getwd()
+@
+
+
+
+\section{Cleaning and transforming data}
+\subsection*{Goals}
+After reading this section, you should ba able to do th following:
+\begin{itemize}
+\item Manipulate categorical variables and stings
+\item Subset a data
+\item Transform variables in a data
+\item Convert data from wide to long formats and back
+\item Sort data
+\end{itemize} 
+
+% useful links: https://www.questionpro.com/blog/data-wrangling/
+\noindent At this point, your data and packages have been successfully loaded to your R instance. Since raw data often has much noise or errors or outliers, etc., it should be processed thoroughly and carefully before fitting a model to it. Data wrangling is the process of transforming raw data into informative data.\\ \vspace{2em}
+\noindent Data cleaning includes identifying outliers, error records and missing values, duplicates records, etc.
+
+\subsection{Cleaning strings}
+Data values can be recorded in a way that R does not understand, for example, a question that requires a TRUE or FALSE response may have been recorded as \textit{Y} or \textit{N},  or \textit{Yes} or \textit{No}. \\ 
+\noindent \textbf{Example:} replace the character variable \textit{drugUse} with the logical value \textit{TRUE} or \textit{FALSE}.
+<<convert_character_to_logical>>=
+
+characterToLogical <- function(x){
+y = rep(NA, length(x))
+y[x == "Yes"] = TRUE
+y[x == "No"] <- FALSE
+return(y)
+}
+dataMovies$drugUseLogical = (characterToLogical(dataMovies$drugUse))
+@
+
+\noindent \textbf{Quick exercise:} Create a dummy (indicator) variable call drugUseDummy for drugUse. Code Yes with 1 and No with 0. What is the data type of drugUseDummy?
+
+
+
+\end{document}

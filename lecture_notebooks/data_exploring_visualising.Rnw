@@ -1,0 +1,45 @@
+%\documentclass{article}
+\documentclass[a4paper]{article}
+
+\usepackage{hyperref}
+\usepackage{float} 
+\usepackage{adjustbox}
+\usepackage{pdfpages}
+\usepackage{xurl}
+
+\title{Introduction to R programming: Data exploration and visualisation}
+\author{Bernard Silenou$^1$ and Henrik Schanze$^1$}
+\date{%
+    $^{1}$Department of Epidemiology, Helmholtz Centre for Infection Research, Braunschweig, Germany\\%
+   % $^2$Organization 2\\[2ex]%
+   \vspace{2em}
+    \today
+}
+\begin{document}
+
+\maketitle
+\vfill
+\tableofcontents
+\clearpage
+
+<<loading_r_packages, echo=FALSE, eval=TRUE, results='hide'>>=
+# knitr chunk options are found here https://yihui.org/knitr/options/
+getwd()
+@
+
+\section{Data exploration}
+\subsection*{Goals}
+\begin{itemize}
+\item bleble
+\item blabla
+\end{itemize}
+
+\section{Data visulization}
+\subsection*{Goals}
+\begin{itemize}
+\item bleble
+\item blabla
+\end{itemize}
+
+
+\end{document}
