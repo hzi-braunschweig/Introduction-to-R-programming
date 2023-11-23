@@ -1,9 +1,9 @@
 ---
 title: "R Basics"
 output:
+  html_notebook: default
   html_document:
     df_print: paged
-  html_notebook: default
   pdf_document: default
 ---
 
@@ -35,6 +35,44 @@ We will use these code chunks to give executable examples and give the opportuni
 From time to time we will use the code chunks for small, not to complex, exercises.
 
 We hope you are now well prepared to follow and enjoy the upcoming course.
+
+## Getting help
+
+Of course we can not learn everything about **R** via this lecture, since there are books filling the content of **R** and it is still being developed further. As mentioned in the beginning of this lecture the (longterm) best way to learn programming is by doing it and that also means learning new things on you own. To be able to do that we give some ways to look for help.
+
+### R help
+
+Quite often we will face functions in **R** without any idea of what they do or what arguments they need or what values they return or a combination of these questions. A quick way to get some information about a existing function is `help()` or its shortcut `?`.
+
+```{r}
+?print
+```
+
+-   **Description** - a brief description what the function does
+-   **Usage** - gives the names of arguments and possible default values
+-   **Arguments** - lists the arguments in more detail
+-   **Details** - gives more information about the function
+-   **Value** - if applicable gives type and details of the object returned by the function
+-   **References** - lists possible references to the function
+-   **See Also** - relates to help pages of similar or related content
+-   **Examples** - gives some helpful examples of using the function. The example code could either be copied and executed manually or executed by `example()`.
+
+```{r}
+example("print")
+```
+
+If we are not sure of the name of a function or are looking in a certain direction you can try using `help.search()` or the shortcut `??` to search with a key word.
+
+```{r}
+??median
+```
+
+### Other means of help
+
+-   [*The R Journal*](https://journal.r-project.org/)
+-   [*Cheat sheets*](https://posit.co/resources/cheatsheets/)
+-   [*Google*](https://www.google.com/) - Try googling error messages you get. You are most certainly not the first person with that issue.
+-   [*Stack Overflow*](https://stackoverflow.com/questions) - A good forum, good for browsing or asking stuff.
 
 ## First Steps
 
@@ -448,28 +486,105 @@ if (x > 0) {
 } else {
   print("x is neither positve nor negative")
 }
-
 ```
 
 ## Loops
 
+The next thing we want to address is also quite import for the concept of programming in general. To illustrate it we tell a short historical story.\
+One of the greatest mathematicians of all time Carl Friedrich Gauß was born in Braunschweig in 1777. Since his family was not wealthy he visited a common school with a lot of pupils in each class. One day the teacher gave all of them the task to sum up all natural numbers between 1 and 100.\
+Let us imagine being one of the kids (not Gauß) and facing this task with programming. We could start adding these numbers up or we could use a concept called a loop, where we repeat a block of code for a determined amount of times.
+
 ### For loop
+
+The first type of loops repeats code for a fixed number of times. We write it with `for` followed by `()`. Between the parentheses we are naming a variable followed by `in` and a vector. The elements of this vector are then assigned to the variable one after the other. The length of the vector therefore determines how often the following code is repeated. After `()` follows the code that should be executed each time in `{}`.
+
+```{r}
+for (i in numeric(length=5)) {
+  print("Hello!")
+}
+```
+
+The neat thing about assigning the variable in between `()` is that we can use that variable in the code block that is repeated.
+
+```{r}
+for (i in c("a","b","c")) {
+  print(i)
+}
+```
+
+Coming back to our motivating task, we could solve this with doing a `for` loop 100 times and adding the number of each step to a total sum.
+
+```{r}
+total <- 0
+for (i in 1:100) {
+   total <- total + i
+}
+total
+```
+
+Since Gauß was a genius he realized that $100 + 1 = 99 + 2 = 98 + 3 = \cdots = 50 + 51 = 101$ and therefore $1+2+\cdots+99+100 = 50\cdot101 = 5050$.
 
 ### While loop
 
+In some situations we might not be interested in repeating some code a fixed number of times, but till a certain condition is met. We can implement this by using `while` followed by the condition in `()` and the code as always in `{}`.
+
+```{r}
+total <- 0
+i <- 0
+while ( i <= 100) {
+  total <- total + i
+  i <- i + 1
+}
+total
+```
+
+Besides satisfying the checked condition there is another way to end a `while` loop. We can check a (safety) condition within the loop and trigger a `break` if that condition is fulfilled.
+
+```{r}
+i <- 0
+while (TRUE) {
+  i <- i + 1
+  print(i)
+  if (i >= 10) {break}
+}
+```
+
+This is often used when we want to make sure that a `while` loop terminates after a maximum number of steps.
+
 ### Alternative
+
+One applications of loops in many programming languages is to manipulate vectors and other similar data structures. Since **R** was developed for 'statistical' programming there are other options doing these kinds of operations. These alternatives are in the majority of cases better suited to do the task we are interested in and therefore perform better then using a loop.
+
+```{r}
+N <- 2e7
+total <- 0
+t_start <- Sys.time()
+for (i in 1:N) {
+  total <- total + i
+}
+total
+print(Sys.time() - t_start)
+
+t_start <- Sys.time()
+sum(1:N)
+print(Sys.time() - t_start)
+```
+
+Of course the run time of our code might only be interesting for a minority of users, but it is an issue especially when dealing with very large data sets. An other advantage is that these functions have a much lower risk of errors and in most cases shorten your code drastically.
 
 ## Functions
 
-## Getting help
-
-### R help
+To this point we have seen and used a number of functions. We will see that for some issues it makes sense to define your own function. Similar to variables we have to give a name to our function. The name should be relative short, understandable and not taken by an already implemented function. When call tell **R** that the name we chose is a function with `function()`. The arguments we want to use with the function have to be inside `()` and we could assign default values to them with `=`.
 
 ```{r}
-?print
+adding <- function(a = 0, b = 0) {
+  return(a+b)
+}
 ```
- 
 
+```{r}
+adding(1,2)
+```
 
 ## R Markdown Auto Text
 
