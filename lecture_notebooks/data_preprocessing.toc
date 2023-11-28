@@ -2,4 +2,10 @@
 \contentsline {subsection}{\numberline {1.1}Loading packages}{2}{subsection.1.1}
 \contentsline {subsection}{\numberline {1.2}Loading data}{2}{subsection.1.2}
 \contentsline {section}{\numberline {2}Cleaning and transforming data}{2}{section.2}
-\contentsline {subsection}{\numberline {2.1}Cleaning strings}{3}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.1}Detecting duplicate records}{3}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Adding and deleting colums in a dataframe}{3}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Cleaning character variables}{4}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Cleaning numeric variables}{5}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}Sorting}{6}{subsection.2.5}
+\contentsline {subsection}{\numberline {2.6}Converting between wide and long form}{6}{subsection.2.6}
+\contentsline {subsection}{\numberline {2.7}Detecting missing values}{7}{subsection.2.7}
