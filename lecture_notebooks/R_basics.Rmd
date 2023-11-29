@@ -15,7 +15,7 @@ Welcome to this introduction course to the programming language **R**. This cour
 
 We will use [**R Markdown**](http://rmarkdown.rstudio.com) **Notebooks** as a mean of teaching for this course. In general these notebooks consists of two different things.\
 On the one hand it consists of text blocks, like the one you are reading right now. They explain motivation, concepts and give background information for the things we are discussing.\
-On the other hand we have code chunks. These are areas where you can write and execute code. You can execute each chunk by clicking the *Run* button on the right side within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. Have a try with the chunk below:
+On the other hand we have code chunks. These are areas where you can write and execute code. You can execute each chunk by clicking the *Run* button on the right side within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter* (for that purpose we recommend to use **RStudio** for working with this notebook). Have a try with the chunk below:
 
 ```{r}
 print("Hello world!")
@@ -24,7 +24,6 @@ print("Hello world!")
 Congratulations you have executed your first line of code (hopefully successful)! Of course this is a rather small code, but the first step is done. Each chunk can include more than just one line of code. If you are interested in executing just one line you can place your cursor in that particular line and press *Ctrl + Enter.*
 
 ```{r}
-
 print("Hello world!")
 print("Hello user!")
 ```
@@ -73,6 +72,7 @@ If we are not sure of the name of a function or are looking in a certain directi
 -   [*Cheat sheets*](https://posit.co/resources/cheatsheets/)
 -   [*Google*](https://www.google.com/) - Try googling error messages you get. You are most certainly not the first person with that issue.
 -   [*Stack Overflow*](https://stackoverflow.com/questions) - A good forum, good for browsing or asking stuff.
+-   [*The Epidemiologist R Handbook*](https://www.epirhandbook.com/en/) - A good reference manual with tasks addressing epidemiological issues.
 
 ## First Steps
 
