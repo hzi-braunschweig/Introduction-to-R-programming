@@ -338,8 +338,8 @@ Similar to a vector we have a number of functions we could use to examine the st
 
 ```{r}
 dim(iris)
-str(iris)
 names(iris)
+str(iris)
 ```
 
 Sometimes we want to have a look into the data without displaying all of it (especially if the data frame has a lot of rows). In that case we can use `head()` to show the first 6 rows of the data frame and `tail()` to show the last 6 rows of the data frame.
@@ -413,6 +413,15 @@ v <- c(-1,0,1,2)
 v < 2
 ```
 
+The neat thing about these element wise operations in **R** is that the resulting logical vector can be used to get access to the elements of the given vector that satisfied the condition.
+
+```{r}
+x <- seq(-5,5,1)
+x <=0
+x[x <= 0]
+x[abs(x) >= 4]
+```
+
 There are some useful operators when checking a condition for vectors of unknown length.
 
 -   `any()` returns `TRUE` if any element fulfills the condition.
@@ -423,15 +432,6 @@ There are some useful operators when checking a condition for vectors of unknown
 any(v <= 0)
 all(v <= 0)
 v %in% c(-1,1)
-```
-
-The neat thing about these element wise operations in **R** is that the resulting logical vector can be used to get access to the elements of the given vector that satisfied the condition.
-
-```{r}
-x <- seq(-5,5,1)
-x <=0
-x[x <= 0]
-x[abs(x) >= 4]
 ```
 
 ### Dealing with missing values
@@ -586,11 +586,23 @@ adding <- function(a = 0, b = 0) {
 adding(1,2)
 ```
 
-## *Exercise: Fibonacci*
+## *Exercise: Fibonacci sequence*
 
-The Fibonacci numbers are a sequence of numbers that play a suprising role $F_{0} = 0$, $F_{1} = 1$ and $F_{n} = F_{n-2} + F_{n-1}$ for $n\geq2$.
+The Fibonacci numbers are a sequence of numbers that play a surprising role in a lot of natural systems. The sequence is defined by $F_{0} = 0$, $F_{1} = 1$ and $F_{n} = F_{n-2} + F_{n-1}$ for $n\geq2$.
+
+*Task*: Write a function that takes a natural number $n$ and returns the Fibonacci numbers til $F_{n}$. You could further:
+
+-   think about a good way returning the sequence,
+
+-   catch wrong inputs for the function,
+
+-   and give the option to choose different starting points.
 
 ```{r}
+
+```
+
+```{r echo=FALSE}
 fib1 <- function(n) {
   fn_2 <- 0
   fn_1 <- 1
@@ -617,7 +629,7 @@ fib2 <- function(n){
   return(fib)
 }
 
-fib2(-12)
+fib2(12)
 
 fib3 <- function(n = 2){
   if (!is.numeric(n) | (n<0)) {
@@ -663,19 +675,3 @@ fib4 <- function(n = 2, fn_2 = 0, fn_1 = 1){
   
 fib4(n = 10, 1, 3)
 ```
-
-## R Markdown Auto Text
-
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
-
-```{r}
-plot(cars)
-```
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
