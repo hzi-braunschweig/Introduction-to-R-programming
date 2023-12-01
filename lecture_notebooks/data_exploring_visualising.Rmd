@@ -1,0 +1,88 @@
+---
+title: 'Data exploration and visualisation'
+author: "Bernard Silenou and Henrik Schanze"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+
+- After imparting and cleaning your data, the next aim before modelling is to understand your data.
+- Essential tools to attain this aim are *summary statistics* and *plots*.
+
+## Goals
+- Be able to calculate a range of summary statistics on numeric data
+- Be able to draw plots and export out of R
+
+# Summary statistics
+- Summary statistics are used to summarize a data in order to communicate the largest amount of information as simply as possible.
+
+- Measures often used are arithmetic mean, variance or standard deviation, and  correlation coefficient.
+
+- The *obama_vs_mccain* dataset contains the fractions of people voting for Obama and McCain in the 2008 US presidential elections.
+
+- We load this data from the R package *learningr* and use it in subsequent examples:
+
+```{r}
+data(obama_vs_mccain, package = "learningr")
+votesObama <- obama_vs_mccain$Obama
+```
+
+
+## List of summary statistics
+Let {x} be the votes for Obama.
+
+Measure of location:
+
+`mean(x)`: sum of x divided by the length
+```{r}
+mean(votesObama)
+```
+
+`median(x)`: 50% of x is above and 50% is below
+```{r}
+median(votesObama)
+```
+
+---
+
+
+
+- Measure of variation:
+`sd(x)`: standard deviation
+`IQR(x)`: interquartile range (robust equivalent of sd when outliers are present in the data)
+`mad(x)`: median absolute deviation (robust equivalent of sd when outliers are present in the data)
+
+- Measure of rank:
+`min(x)`: minimum value of x
+`max(x)`: maximum value of x
+`quantile(x, 0.25)`: 25% of x is below this value
+
+- Measure of position:
+`first(x)`: equivalent to x[1]
+`nth(x, 2)`: equivalent to n<-2; x[n]
+`last(x)`: equivalent to x[length(x)]
+
+- Counts:
+`n(x)`: the number of element in x
+`sum(!is.na(x))`: count non-missing values
+`n_distinct(x)`: count the number of unique value
+
+
+
+
+
+
+# plots
+## Systems of plots
+
+## Scatter plot
+
+## Line plot
+
+## Histogram 
+
+## Bar chart
+
