@@ -6,83 +6,257 @@ output:
   html_document:
     toc: true
     theme: united
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
-
-- After imparting and cleaning your data, the next aim before modelling is to understand your data.
-- Essential tools to attain this aim are *summary statistics* and *plots*.
+-   After imparting and cleaning your data, the next aim before
+    modelling is to understand your data.
+-   Essential tools to attain this aim are *summary statistics* and
+    *plots*.
 
 ## Goals
-- Be able to calculate a range of summary statistics on numeric data
-- Be able to draw plots and export out of R
+
+-   Be able to calculate a range of summary statistics on numeric data
+-   Be able to draw plots and export out of R
 
 # Summary statistics
-- Summary statistics are used to summarize a data in order to communicate the largest amount of information as simply as possible.
 
-- Measures often used are arithmetic mean, variance or standard deviation, and  correlation coefficient.
+-   Summary statistics are used to summarize a data in order to
+    communicate the largest amount of information as simply as possible.
 
-- The *obama_vs_mccain* dataset contains the fractions of people voting for Obama and McCain in the 2008 US presidential elections.
+-   Measures often used are arithmetic mean, variance or standard
+    deviation, and correlation coefficient.
 
-- We load this data from the R package *learningr* and use it in subsequent examples:
+-   The *obama_vs_mccain* dataset contains the fractions of people
+    voting for Obama and McCain in the 2008 US presidential elections.
+
+-   We load this data from the R package *learningr* and use it in
+    subsequent examples:
 
 ```{r}
 data(obama_vs_mccain, package = "learningr")
 votesObama <- obama_vs_mccain$Obama
 ```
 
+\% \## List of summary statistics
 
-## List of summary statistics
 Let {x} be the votes for Obama.
 
-Measure of location:
+### Measure of location:
 
 `mean(x)`: sum of x divided by the length
+
 ```{r}
 mean(votesObama)
 ```
 
 `median(x)`: 50% of x is above and 50% is below
+
 ```{r}
 median(votesObama)
 ```
 
----
+### Measure of rank:
 
-
-
-- Measure of variation:
-`sd(x)`: standard deviation
-`IQR(x)`: interquartile range (robust equivalent of sd when outliers are present in the data)
-`mad(x)`: median absolute deviation (robust equivalent of sd when outliers are present in the data)
-
-- Measure of rank:
 `min(x)`: minimum value of x
+
+```{r}
+min(votesObama)
+```
+
 `max(x)`: maximum value of x
-`quantile(x, 0.25)`: 25% of x is below this value
 
-- Measure of position:
-`first(x)`: equivalent to x[1]
-`nth(x, 2)`: equivalent to n<-2; x[n]
-`last(x)`: equivalent to x[length(x)]
+```{r}
+max(votesObama)
+```
 
-- Counts:
-`n(x)`: the number of element in x
-`sum(!is.na(x))`: count non-missing values
-`n_distinct(x)`: count the number of unique value
+`quantile(x, 0.25)`: 25% of x is below this value; `quantile(x, 0.50)`==
+median(x)
 
+```{r}
+quantile(votesObama, 0.50)
+median(votesObama)
+quantile(votesObama)
+```
 
+### Measure of variation:
 
+`sd(x)`: standard deviation, square sd to get variance or use `var(x)`
 
+```{r}
+sd(votesObama)
+var(votesObama) 
+sd(votesObama)**2
+```
 
+`range(x)`: gives min and max values
 
-# plots
+```{r}
+range(votesObama)
+
+```
+
+`IQR(x)`: interquartile range == 75th percentile minus 25th percentile
+
+```{r}
+IQR(votesObama)
+
+```
+
+### Measure of position or count:
+
+`x[1]`: first element in x
+
+```{r}
+votesObama[1]
+```
+
+`x[length(x)]`: last element in x
+
+```{r}
+votesObama[length(votesObama)]
+```
+
+**Quick exercise**: what is the last last but one element in
+`votsObama`?
+
+### Other summary statistics functions:
+
+`summary(x)`: generic function to compute multiple statistics at once
+
+```{r}
+summary(votesObama)
+summary(obama_vs_mccain)
+```
+
+`length(x)`: the number of element in x
+
+```{r}
+length(votesObama)
+dim(obama_vs_mccain)
+dim(obama_vs_mccain)[1] # the same as nrow(obama_vs_mccain)
+dim(obama_vs_mccain)[2] # the same as ncol(obama_vs_mccain)
+```
+
+`table(is.na(x))`: count the number of missing and non missing values
+
+```{r}
+table(is.na(votesObama))
+```
+
+`length(unique(x))`: count the number of unique value
+
+```{r}
+length(unique(obama_vs_mccain$Region))
+```
+
+`cor(x)`: calculates correlations between numeric vectors, "pearson"
+(default)
+
+```{r}
+cor(obama_vs_mccain$Obama, obama_vs_mccain$McCain)
+```
+
+`cov(x)`: calculates covariance between numeric vectors, "pearson"
+(default)
+
+```{r}
+with(obama_vs_mccain, cov(Obama, McCain)) # the same as cov(obama_vs_mccain$Obama, obama_vs_mccain$McCain)
+```
+
+# Plots
+
 ## Systems of plots
+
+R has three systems of graphics: *base*, *grid*, and *lattice*.
+
+**Base graphics** is easy to get started with but hard to extend to new
+graph types. It will be used for a greater part of this section.
+
+**Grid graphics** provides greater flexibility but require writing much
+lines of code. Example is package ggplot2--most modern and widely used.
+
+**Lattice graphics** is built on top of the grid system, providing
+high-level functions for all the common plot types. Plot output can be
+saved as objects, edited and later plotted.
+
+The three systems are, sadly, mostly incompatible, thus recommended to
+choose one system for a project. ggplot2 is a good choice.
 
 ## Scatter plot
 
+It is used to explore the relationship between  two continuous variables
+
+### Using base R
+Example: Does voters *Income* affect *Turnout* at the polls?
+
+`plot(x)` to plot scatter plot. NA are omitted by default.
+
+```{r}
+# Deleting NA
+obama_vs_mccain_turnout_non_na = obama_vs_mccain[!is.na(obama_vs_mccain$Turnout), ]
+# plotting scatter plot
+plot(obama_vs_mccain_turnout_non_na$Income, obama_vs_mccain_turnout_non_na$Turnout)
+# or using with command
+with(obama_vs_mccain_turnout_non_na, plot(Income, Turnout))
+```
+
+We can edit the plot by using various parameters as described in the help document `? plot` or `?? plot`
+
+```{r}
+with(obama_vs_mccain_turnout_non_na, plot(Income, Turnout, type = "p", main = "Scatter plot of Turnout versus Incoms",
+                                          sub= "Obaba Vs McCain", xlab = "varage income", ylab = "Turnout percentage",
+                                          col = "red", pch = 19, cex = 1.5 ))
+```
+
+Positive correlation between income and turnout
+
+### Using ggplot2 package
+
+Example: Does voters *Income* affect *Turnout* at the polls?
+
+`ggplot()` to construct a plot. It takes a *dataframe* as its first argument and an *aesthetic* as its second. 
+
+`geom_...()` to add e.g. points/line on the plot
+
+```{r}
+library(ggplot2)
+gg1 = ggplot(obama_vs_mccain_turnout_non_na, aes(Income, Turnout, colour = Region)) + # colour points by region
+geom_point(shape = 20)
+print(gg1)
+```
+
+To draw individual plots for each region, we add a *facet* using the function `facet_wrap`.
+
+```{r}
+gg2 = gg1 + 
+  facet_wrap(~ Region, ncol = 5) +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))   # to rotate x axis
+plot(gg2)
+  
+```
+
+
+
+
 ## Line plot
 
-## Histogram 
+
+
+
+## Histogram
 
 ## Bar chart
 
+
+
+## Getting help
+- [Posit Community, formally known as RStudio community](https://community.rstudio.com/)
+
+- [Stack Overflow link for ggplot](https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&pageSize=50)
+
+- [ggplot2 GitHub](https://github.com/tidyverse/ggplot2)
+
+- [ggplot2 references for further reading](https://r4ds.hadley.nz/data-visualize)
