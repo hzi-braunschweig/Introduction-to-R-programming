@@ -1,5 +1,5 @@
 ---
-title: 'Data exploration and visualisation'
+title: ' Summary statistics and visualisations'
 author: "Bernard Silenou and Henrik Schanze"
 date: "`r Sys.Date()`"
 output:
@@ -36,11 +36,10 @@ editor_options:
     subsequent examples:
 
 ```{r}
+data(package = "learningr") # to print the names of dataset in the package learningr
 data(obama_vs_mccain, package = "learningr")
-votesObama <- obama_vs_mccain$Obama
+votesObama = obama_vs_mccain$Obama
 ```
-
-\% \## List of summary statistics
 
 Let {x} be the votes for Obama.
 
@@ -166,7 +165,7 @@ cor(obama_vs_mccain$Obama, obama_vs_mccain$McCain)
 with(obama_vs_mccain, cov(Obama, McCain)) # the same as cov(obama_vs_mccain$Obama, obama_vs_mccain$McCain)
 ```
 
-# Plots
+# Visulisations
 
 ## Systems of plots
 
@@ -238,21 +237,86 @@ plot(gg2)
   
 ```
 
-
-
-
 ## Line plot
+It is often used to explore how a continuous variable changes over time. It provides information about trend.
+
+**Data:** we will use the crab data **crab_tag** in this section.
+
+```{r}
+# Extracting data from package
+data(crab_tag, package = "learningr")
+crab_tag_daylog = crab_tag$daylog 
+str(crab_tag_daylog)
+```
+
+### Using base R
+
+**Example**: Draw a line plot of max depth against date
+
+`plot(x)` to plot line plot, just as scatter plot but with the option ` type = "l"`. The `plot()` function can be used to plot many other types of plot.
+
+```{r}
+# Drawing line plot
+with(
+crab_tag_daylog,
+plot(Date, Max.Depth, type = "l")
+)
+```
+
+Inverting the y axis and assigning limits to make it look nice
+```{r}
+with(
+crab_tag_daylog,
+plot(Date, -Max.Depth, type = "l", ylim = c(-max(Max.Depth)-10, 10)) 
+)
+```
+
+Example: Draw a line plot for max and min depth against date on the same figure using different colours.
+
+`lines()` To draw additional lines on an existing plot. The equivalent for scatterplot is `points()`.
+
+```{r}
+with(
+crab_tag_daylog,
+plot(Date, -Max.Depth, type = "l", ylim = c(-max(Max.Depth)-10, 10)) 
+)
+# Adding the lines for min depth on the existing plot of max depth
+with(
+crab_tag$daylog,
+lines(Date, -Min.Depth, col = "blue")
+)
+```
+
+
+**Quick Exercise**: On the scatter plot of turnout Vs income plotted in previous section, increase the income by 300 and plot the new scatter plot on the existing plot. Use different colours.
+
+  
+### Using ggplot2 package
+
+**Example**: Draw a line plot of max depth against date
+
+Swapping a scatter plot for a line plot is as simple as swapping `geom_point` for `geom_line`
+
+```{r}
+ggplot(crab_tag_daylog, aes(Date)) +
+geom_line(aes(y = -Max.Depth), colour = "#a83b48") + # google "colour picker" to get the codes
+geom_line(aes(y = -Min.Depth), colour = "darkgrey")
+```
 
 
 
+## Box plot
 
 ## Histogram
 
 ## Bar chart
 
+## Additional visulisations using gglot2 package
 
+- [ggplot2 references for further reading](https://r4ds.hadley.nz/data-visualize)
+- [ggplot2 references manual](https://cloud.r-project.org/web/packages/ggplot2/ggplot2.pdf)
 
-## Getting help
+# Getting help
 - [Posit Community, formally known as RStudio community](https://community.rstudio.com/)
 
 - [Stack Overflow link for ggplot](https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&pageSize=50)
