@@ -26,7 +26,6 @@ Congratulations you have executed your first line of code (hopefully successful)
 ```{r}
 print("Hello world!")
 print("Hello user!")
-
 ```
 
 However we recommend to limit the number of lines of code for a better understanding.
@@ -45,7 +44,7 @@ Of course we can not learn everything about **R** via this lecture, since there 
 Quite often we will face functions in **R** without any idea of what they do or what arguments they need or what values they return or a combination of these questions. A quick way to get some information about a existing function is `help()` or its shortcut `?`.
 
 ```{r}
-?print
+?pinr
 ```
 
 -   **Description** - a brief description what the function does
@@ -59,6 +58,7 @@ Quite often we will face functions in **R** without any idea of what they do or 
 
 ```{r}
 example("print")
+for(i in 1:3) print("Hello")
 ```
 
 If we are not sure of the name of a function or are looking in a certain direction you can try using `help.search()` or the shortcut `??` to search with a key word.
@@ -74,6 +74,7 @@ If we are not sure of the name of a function or are looking in a certain directi
 -   [*Google*](https://www.google.com/) - Try googling error messages you get. You are most certainly not the first person with that issue.
 -   [*Stack Overflow*](https://stackoverflow.com/questions) - A good forum, good for browsing or asking stuff.
 -   [*The Epidemiologist R Handbook*](https://www.epirhandbook.com/en/) - A good reference manual with tasks addressing epidemiological issues.
+-   [*Discovering statistics using R*](https://uk.sagepub.com/en-gb/eur/discovering-statistics-using-r/book236067)
 
 As a mean of further learning we could recommend having a look in the package `swirl` an interactive **R** course in the **R** console.
 
@@ -150,7 +151,7 @@ We have mentioned some special values in **R** that we are not allowed to overri
 -   `NULL` marks something that is a undefined value.
 -   `NA` is an indicator for a missing value.
 -   `NaN` stands for 'Not a Number' and appears for undefined numerical values such as $\log(-1)$.
--   `Inf/-Inf` stands for 'Infinity' and marks verly large values or results of division by zero and vice versa for `-Inf` .
+-   `Inf/-Inf` stands for 'Infinity' and marks verly large values or results of division by zero and vice versa for `-Inf`.
 
 ### Data types and structures in R
 
@@ -178,6 +179,7 @@ str("a")
 str(1)
 str(2L)
 str(2+4i)
+str(a)
 ```
 
 We will later face other types of data, which are derived from these basic types.\
@@ -257,8 +259,8 @@ We can access the elements stored in a vector by the name of the vector followed
 
 ```{r}
 names <- c("jupiter", "peter", "bob")
-names[1]
-names[2:3]
+names[3]
+names[1:length(names)]
 ```
 
 Sometimes we are interested in all but some values of a vector. We can indicate the positions we do not want to access via a preceding `-`.
@@ -267,6 +269,7 @@ Sometimes we are interested in all but some values of a vector. We can indicate 
 x <-c("a", "b", "c", "d")
 x[-2]
 x[-c(2,4)]
+x[c(1,3)]
 ```
 
 Another way to access values in given vector is by using a logical vector of the same length with `TRUE` at the positions we want to access.
@@ -289,7 +292,6 @@ When we derive a vector out of data we have imported we might face the the situa
 
 ```{r}
 v <- c(1,2,NA,4,5,NA)
-v
 ```
 
 We can examine if and where a given vector has missing entries by calling the function `is.na()`. Applying this function results in a logical vector of the same length, indicating if an entry is `NA` or not.
@@ -302,8 +304,9 @@ This enables us to specifically access the values that are `NA` in a vector, e.g
 
 ```{r}
 v
+sum(v)
 v[is.na(v)] <- 0
-v
+sum(v)
 ```
 
 If we just want to know if any of the entries is missing we can call `anyNA()`.
@@ -316,7 +319,7 @@ anyNA(c(1,NA,3,4))
 At the beginning we mentioned that a vector only contains objects of one data type, but what happens if we try to implement a vector consisting of different data types.
 
 ```{r}
-v <- c(1,TRUE, 1+1i, "A")
+v <- c(1,TRUE)
 v
 typeof(v)
 ```
@@ -332,7 +335,7 @@ data.frame(c("a","b","c","d"), c(1,2,3,4), c(TRUE, FALSE, FALSE, TRUE))
 As we can see the names of the columns are not very understandable or usable. It is therefore almost always a good idea to give the columns sensible names.
 
 ```{r}
-data.frame(id = c("a","b","c","d"), x = c(1,2,3,4), exposure = c(TRUE, FALSE, FALSE, TRUE))
+data.frame(id = c("a","b","c","d"), age = c(1,2,3,4), exposure = c(TRUE, FALSE, FALSE, TRUE))
 ```
 
 When creating a data frame we have to keep in mind, that all vectors have to have the same length. If that is not the case one possible solution is to use `NA` to fill up the needed space in a vector.
@@ -359,7 +362,7 @@ str(iris)
 Sometimes we want to have a look into the data without displaying all of it (especially if the data frame has a lot of rows). In that case we can use `head()` to show the first 6 rows of the data frame and `tail()` to show the last 6 rows of the data frame.
 
 ```{r}
-head(iris)
+tail(iris, n = 4)
 ```
 
 If we want to access some of the data in a given data frame we have different options.
@@ -373,6 +376,7 @@ df[1,2]
 df[1,]
 df[,2]
 df$height
+df$name
 df[c("name","height")]
 ```
 
@@ -403,7 +407,7 @@ The basic logical operators are:
 Most of them do what we would intuitively think they do. The exception to this is the equal operator. We have to remember to use two equal signs instead of one. If you just one equal sign you try to assign a value to an object.
 
 ```{r}
-x = 5
+x = 4
 x == 5
 
 5 = x
@@ -413,8 +417,8 @@ x == 5
 In many situations we want more complex conditions as the ones presented above. We can combine logical conditions using `&` (and), `|` (or) and `!` (not) for that.
 
 ```{r}
-x
-is.numeric(x) & (x < 10)
+x <- 11
+is.numeric(x) | (x < 10)
 !is.character(x)
 ```
 
@@ -423,7 +427,7 @@ is.numeric(x) & (x < 10)
 In **R** we can easily compare the elements of a vector via a logical operator.
 
 ```{r}
-v <- c(-1,0,1,2)
+v <- c(-1, -1,0,1,2)
 
 v < 2
 ```
@@ -433,7 +437,7 @@ The neat thing about these element wise operations in **R** is that the resultin
 ```{r}
 x <- seq(-5,5,1)
 x <=0
-x[x <= 0]
+x[x != 0]
 x[abs(x) >= 4]
 ```
 
@@ -447,6 +451,7 @@ There are some useful operators when checking a condition for vectors of unknown
 any(v <= 0)
 all(v <= 0)
 v %in% c(-1,1)
+v[v %in% c(-1,1)]
 ```
 
 ### Dealing with missing values
@@ -480,22 +485,23 @@ if (x > 0) {log(x)}
 In most situations it makes sense to execute some alternative code if the condition fails and be it a message that the conditions are not fulfilled. We can do this by adding `else` after the curly bracket followed by the alternative code in `{}` behind.
 
 ```{r}
-x <- -2
+x <- 0
 
 if (x > 0) {
-  log(x)
+  print(log(x))
 } else {
-  print("x is not greater than 0!")
+  x <- abs(x)
+  log(x)
 }
 ```
 
 Using `if` and `else` allows us to distinguish between two cases, either a condition is satisfied or not. Some situations require a more sophisticated distinction of cases. To tackle that issue we could either but a new `if` statement inside the executed code or we could use a more elegant way the `else if` statement. Like `else` it is put behind the `{}` of the preceding statement, but adds a new condition which must be met before executing the following code.
 
 ```{r}
-x <-  2
+x <- -2
 
-if (x > 0) {
-  print("x is positive")
+if (is.na(x)) {
+  print("x is NA")
 } else if (x < 0) {
   print("x is negative")
 } else {
@@ -514,7 +520,7 @@ Let us imagine being one of the kids (not Gauß) and facing this task with progr
 The first type of loops repeats code for a fixed number of times. We write it with `for` followed by `()`. Between the parentheses we are naming a variable followed by `in` and a vector. The elements of this vector are then assigned to the variable one after the other. The length of the vector therefore determines how often the following code is repeated. After `()` follows the code that should be executed each time in `{}`.
 
 ```{r}
-for (i in numeric(length=5)) {
+for (i in numeric(length=10)) {
   print("Hello!")
 }
 ```
@@ -531,8 +537,8 @@ Coming back to our motivating task, we could solve this with doing a `for` loop 
 
 ```{r}
 total <- 0
-for (i in 1:100) {
-   total <- total + i
+for (j in 1:10) {
+   total <- total + j
 }
 total
 ```
@@ -546,7 +552,7 @@ In some situations we might not be interested in repeating some code a fixed num
 ```{r}
 total <- 0
 i <- 0
-while ( i <= 100) {
+while (i <= 10) {
   total <- total + i
   i <- i + 1
 }
@@ -571,17 +577,22 @@ This is often used when we want to make sure that a `while` loop terminates afte
 One applications of loops in many programming languages is to manipulate vectors and other similar data structures. Since **R** was developed for 'statistical' programming there are other options doing these kinds of operations. These alternatives are in the majority of cases better suited to do the task we are interested in and therefore perform better then using a loop.
 
 ```{r}
-N <- 2e7
+N <- 1e3
 total <- 0
 t_start <- Sys.time()
+
 for (i in 1:N) {
   total <- total + i
 }
+
+
 total
 print(Sys.time() - t_start)
 
 t_start <- Sys.time()
+
 sum(1:N)
+
 print(Sys.time() - t_start)
 ```
 
@@ -599,12 +610,13 @@ To this point we have seen and used a number of functions. We will see that for 
 
 ```{r}
 adding <- function(a = 0, b = 0) {
+  print(b)
   return(a+b)
 }
 ```
 
 ```{r}
-adding(1,2)
+adding(3)
 ```
 
 ## *Exercise: Fibonacci sequence*
