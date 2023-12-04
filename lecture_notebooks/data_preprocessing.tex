@@ -69,7 +69,7 @@
     $^{1}$Department of Epidemiology, Helmholtz Centre for Infection Research, Braunschweig, Germany\\%
    % $^2$Organization 2\\[2ex]%
    \vspace{2em} 
-    \today
+   Version on \today
 }
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
@@ -114,7 +114,7 @@ As an example we want to use a \texttt{.csv} file which stores data about movies
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{setwd}\hlstd{(}\hlstr{"~/Introduction-to-R-programming/lecture_notebooks"}\hlstd{)}
-\hlstd{dataMovies} \hlkwb{=} \hlkwd{read.csv}\hlstd{(}\hlstr{"./data/movies.csv"}\hlstd{)}
+\hlstd{dataMovies} \hlkwb{<-} \hlkwd{read.csv}\hlstd{(}\hlstr{"./data/movies.csv"}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -160,8 +160,8 @@ After reading this section, you should be able to do th following:
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# checking if there are duplicates}
-\hlstd{dataName} \hlkwb{=} \hlkwd{data.frame}\hlstd{(}\hlkwd{table}\hlstd{(dataMovies}\hlopt{$}\hlstd{name))}
-\hlstd{duplicateNames} \hlkwb{=} \hlstd{dataName[dataName}\hlopt{$}\hlstd{Freq} \hlopt{>}\hlnum{1}\hlstd{,]}
+\hlstd{dataName} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwd{table}\hlstd{(dataMovies}\hlopt{$}\hlstd{name))}
+\hlstd{duplicateNames} \hlkwb{<-} \hlstd{dataName[dataName}\hlopt{$}\hlstd{Freq} \hlopt{>}\hlnum{1}\hlstd{,]}
 \hlkwd{dim}\hlstd{(duplicateNames)}
 \end{alltt}
 \begin{verbatim}
@@ -172,13 +172,13 @@ After reading this section, you should be able to do th following:
 
 \hlcom{# Deleting rows with duplicate names at random}
 \hlkwd{library}\hlstd{(dplyr)}
-\hlstd{dataMoviesDistinctName} \hlkwb{=} \hlstd{dplyr}\hlopt{::}\hlkwd{distinct}\hlstd{(dataMovies, name,} \hlkwc{.keep_all} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlstd{dataMoviesDistinctName} \hlkwb{<-} \hlstd{dplyr}\hlopt{::}\hlkwd{distinct}\hlstd{(dataMovies, name,} \hlkwc{.keep_all} \hlstd{=} \hlnum{TRUE}\hlstd{)}
 
 \hlcom{# Deleting rows with duplicate year and score}
-\hlstd{dataMoviesDistinctYearScore} \hlkwb{=} \hlstd{dplyr}\hlopt{::}\hlkwd{distinct}\hlstd{(dataMovies, year, score,} \hlkwc{.keep_all} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlstd{dataMoviesDistinctYearScore} \hlkwb{<-} \hlstd{dplyr}\hlopt{::}\hlkwd{distinct}\hlstd{(dataMovies, year, score,} \hlkwc{.keep_all} \hlstd{=} \hlnum{TRUE}\hlstd{)}
 
 \hlcom{# Deleting rows with duplicates for all the columns}
-\hlstd{dataMoviesDistinctAll} \hlkwb{=} \hlstd{dplyr}\hlopt{::}\hlkwd{distinct}\hlstd{(dataMovies,} \hlkwc{.keep_all} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlstd{dataMoviesDistinctAll} \hlkwb{<-} \hlstd{dplyr}\hlopt{::}\hlkwd{distinct}\hlstd{(dataMovies,} \hlkwc{.keep_all} \hlstd{=} \hlnum{TRUE}\hlstd{)}
 \hlkwd{nrow}\hlstd{(dataMoviesDistinctAll)} \hlcom{# The same as dataMovies}
 \end{alltt}
 \begin{verbatim}
@@ -199,8 +199,8 @@ After reading this section, you should be able to do th following:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{dataMovies}\hlopt{$}\hlstd{age}  \hlkwb{=} \hlstd{dataMovies}\hlopt{$}\hlstd{yearCurrent} \hlopt{-} \hlstd{dataMovies}\hlopt{$}\hlstd{year}
-\hlstd{dataMovies}\hlopt{$}\hlstd{scoreTotal}  \hlkwb{=} \hlstd{dataMovies}\hlopt{$}\hlstd{score} \hlopt{+} \hlstd{dataMovies}\hlopt{$}\hlstd{scoreSecond}
+\hlstd{dataMovies}\hlopt{$}\hlstd{age}  \hlkwb{<-} \hlstd{dataMovies}\hlopt{$}\hlstd{yearCurrent} \hlopt{-} \hlstd{dataMovies}\hlopt{$}\hlstd{year}
+\hlstd{dataMovies}\hlopt{$}\hlstd{scoreTotal}  \hlkwb{<-} \hlstd{dataMovies}\hlopt{$}\hlstd{score} \hlopt{+} \hlstd{dataMovies}\hlopt{$}\hlstd{scoreSecond}
 \hlkwd{head}\hlstd{(dataMovies,} \hlnum{3}\hlstd{)[,} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{20}\hlopt{:}\hlkwd{ncol}\hlstd{(dataMovies))]}
 \end{alltt}
 \begin{verbatim}
@@ -215,7 +215,7 @@ After reading this section, you should be able to do th following:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{dataMovies} \hlkwb{=} \hlkwd{within}\hlstd{(}
+\hlstd{dataMovies} \hlkwb{<-} \hlkwd{within}\hlstd{(}
 \hlkwc{data} \hlstd{= dataMovies,}
 \hlkwc{expr} \hlstd{= \{}
 \hlstd{age} \hlkwb{=} \hlstd{yearCurrent} \hlopt{-} \hlstd{year}
@@ -263,7 +263,7 @@ Data values can be recorded in a way that R does not understand, for example, a 
 \begin{verbatim}
 ## 
 ##      f Female      M   male   Male   <NA> 
-##   1255   1311   1243   1349   1289   1221
+##   1221   1324   1311   1229   1277   1306
 \end{verbatim}
 \begin{alltt}
 \hlstd{replacing_enums} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)\{}
@@ -315,7 +315,7 @@ Data values can be recorded with \textit{errors}. For example, age of 114 yrs fo
 \end{verbatim}
 \begin{alltt}
 \hlcom{# Filtering records with age less than 10 or grater than 40}
-\hlstd{dataMoviesAgeNot10to40} \hlkwb{=} \hlstd{dataMovies[(dataMovies}\hlopt{$}\hlstd{age} \hlopt{<} \hlnum{10} \hlopt{|} \hlstd{dataMovies}\hlopt{$}\hlstd{age} \hlopt{>} \hlnum{40}\hlstd{), ]}
+\hlstd{dataMoviesAgeNot10to40} \hlkwb{<-} \hlstd{dataMovies[(dataMovies}\hlopt{$}\hlstd{age} \hlopt{<} \hlnum{10} \hlopt{|} \hlstd{dataMovies}\hlopt{$}\hlstd{age} \hlopt{>} \hlnum{40}\hlstd{), ]}
 \hlcom{#Counting number of records}
 \hlkwd{nrow}\hlstd{(dataMoviesAgeNot10to40)} \hlcom{# or dim(dataMoviesAgeNot10to40)[1]}
 \end{alltt}
@@ -324,18 +324,18 @@ Data values can be recorded with \textit{errors}. For example, age of 114 yrs fo
 \end{verbatim}
 \begin{alltt}
 \hlcom{# Alternately, we can negate the condition to filter for age between 10 to 40}
-\hlstd{dataMoviesAge10to40} \hlkwb{=} \hlstd{dataMovies[}\hlopt{!}\hlstd{(dataMovies}\hlopt{$}\hlstd{age} \hlopt{<} \hlnum{10} \hlopt{|} \hlstd{dataMovies}\hlopt{$}\hlstd{age} \hlopt{>} \hlnum{40}\hlstd{), ]}
+\hlstd{dataMoviesAge10to40} \hlkwb{<-} \hlstd{dataMovies[}\hlopt{!}\hlstd{(dataMovies}\hlopt{$}\hlstd{age} \hlopt{<} \hlnum{10} \hlopt{|} \hlstd{dataMovies}\hlopt{$}\hlstd{age} \hlopt{>} \hlnum{40}\hlstd{), ]}
 \hlcom{# OR }
-\hlstd{dataMoviesAge10to40} \hlkwb{=} \hlstd{dataMovies[(dataMovies}\hlopt{$}\hlstd{age} \hlopt{>=} \hlnum{10} \hlopt{&} \hlstd{dataMovies}\hlopt{$}\hlstd{age} \hlopt{<=} \hlnum{40}\hlstd{), ]}
+\hlstd{dataMoviesAge10to40} \hlkwb{<-} \hlstd{dataMovies[(dataMovies}\hlopt{$}\hlstd{age} \hlopt{>=} \hlnum{10} \hlopt{&} \hlstd{dataMovies}\hlopt{$}\hlstd{age} \hlopt{<=} \hlnum{40}\hlstd{), ]}
 
 \hlcom{# Replacing numeric variables}
 \hlcom{# Copying age to a new column called ageImputed }
 \hlcom{# It is not advisable to manipulate existing variables}
-\hlstd{dataMovies}\hlopt{$}\hlstd{ageImputed} \hlkwb{=} \hlstd{dataMovies}\hlopt{$}\hlstd{age}
+\hlstd{dataMovies}\hlopt{$}\hlstd{ageImputed} \hlkwb{<-} \hlstd{dataMovies}\hlopt{$}\hlstd{age}
 \hlcom{# Replacing ages less than 10 with 10}
-\hlstd{dataMovies[dataMovies}\hlopt{$}\hlstd{ageImputed} \hlopt{<} \hlnum{10}\hlstd{, ]} \hlkwb{=} \hlnum{10}
+\hlstd{dataMovies}\hlopt{$}\hlstd{ageImputed[dataMovies}\hlopt{$}\hlstd{ageImputed} \hlopt{<} \hlnum{10}\hlstd{]} \hlkwb{<-} \hlnum{10}
 \hlcom{# Replacing ages greater than 40 with 40}
-\hlstd{dataMovies[dataMovies}\hlopt{$}\hlstd{ageImputed} \hlopt{>} \hlnum{40}\hlstd{, ]} \hlkwb{=} \hlnum{40}
+\hlstd{dataMovies}\hlopt{$}\hlstd{ageImputed[dataMovies}\hlopt{$}\hlstd{ageImputed} \hlopt{>} \hlnum{40}\hlstd{]} \hlkwb{<-} \hlnum{40}  \hlcom{# do this same task using within function}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -352,17 +352,17 @@ Data values can be recorded with \textit{errors}. For example, age of 114 yrs fo
 
 \noindent Sorting involves \textit{arranging} data into some  \textit{meaningful order} to make it easier to understand or analyse. \vspace{1em}
 
-\noindent \textbf{Example:} Sort \texttt{dataMovies} using the following variables: (a) \texttt{year} , (a) \texttt{rating} , (a) \texttt{score} and \texttt{votes}. 
+\noindent \textbf{Example:} Sort \texttt{dataMovies} using the following variables: (a) \texttt{year} , (b) \texttt{rating} , (c) \texttt{score} and \texttt{votes}. 
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Sorting by year (integer)}
-\hlstd{dataMoviesSortYear} \hlkwb{=}  \hlstd{dataMovies[}\hlkwd{order}\hlstd{(dataMovies}\hlopt{$}\hlstd{year), ]}
-\hlcom{# Use vector[order(vector)] # to sort a vector}
+\hlstd{dataMoviesSortYear} \hlkwb{<-}  \hlstd{dataMovies[}\hlkwd{order}\hlstd{(dataMovies}\hlopt{$}\hlstd{year), ]}
+\hlcom{# Use the general form "vector[order(vector)]" # to sort a vector}
 
 \hlcom{# Sorting by rating (character)}
-\hlstd{dataMoviesSortRating} \hlkwb{=}  \hlstd{dataMovies[}\hlkwd{order}\hlstd{(dataMovies}\hlopt{$}\hlstd{rating,} \hlkwc{decreasing} \hlstd{= T), ]}
+\hlstd{dataMoviesSortRating} \hlkwb{<-}  \hlstd{dataMovies[}\hlkwd{order}\hlstd{(dataMovies}\hlopt{$}\hlstd{rating,} \hlkwc{decreasing} \hlstd{= T), ]}
 
 \hlcom{# Sorting by score (numeric) and rating (character), Order matters!}
 \hlstd{dataMoviesSortScoreRating} \hlkwb{=}  \hlstd{dataMovies[}\hlkwd{order}\hlstd{(dataMovies}\hlopt{$}\hlstd{score, dataMovies}\hlopt{$}\hlstd{rating), ]}
@@ -400,32 +400,33 @@ Long format: for each data point there are many rows as the number of variables.
 \begin{alltt}
 \hlkwd{library}\hlstd{(reshape2)}
 \hlcom{# Converting from wide to long format}
-\hlstd{dataMoviesScoresGross} \hlkwb{=} \hlstd{dataMovies[,} \hlkwd{colnames}\hlstd{(dataMovies)} \hlopt{%in%}
+\hlstd{dataMoviesScoresGross} \hlkwb{<-} \hlstd{dataMovies[,} \hlkwd{colnames}\hlstd{(dataMovies)} \hlopt{%in%}
                                      \hlkwd{c}\hlstd{(}\hlstr{"name"}\hlstd{,} \hlstr{"score"}\hlstd{,} \hlstr{"scoreSecond"}\hlstd{,}  \hlstr{"gross"}\hlstd{)]}
 \hlstd{dataMoviesScoresGrossLong} \hlkwb{=} \hlkwd{melt}\hlstd{(}\hlkwc{data} \hlstd{= dataMoviesScoresGross,} \hlkwc{id.vars} \hlstd{=} \hlstr{"name"}\hlstd{)}
-\hlkwd{head}\hlstd{(dataMoviesScoresGrossLong,}\hlnum{3}\hlstd{)}
+
+\hlstd{dataMoviesSortScoreRatingWith} \hlkwb{=} \hlstd{dataMovies[}\hlkwd{with}\hlstd{(dataMovies,} \hlkwd{order}\hlstd{(score, rating)), ]}
+
+
+\hlkwd{head}\hlstd{(dataMoviesScoresGrossLong[}\hlkwd{with}\hlstd{(dataMoviesScoresGrossLong,} \hlkwd{order}\hlstd{(name)),],} \hlnum{10}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-##   name variable value
-## 1   40    score    40
-## 2   40    score    40
-## 3   40    score    40
-\end{verbatim}
-\begin{alltt}
-\hlkwd{tail}\hlstd{(dataMoviesScoresGrossLong,} \hlnum{3} \hlstd{)}
-\end{alltt}
-\begin{verbatim}
-##       name    variable value
-## 23002   10 scoreSecond    10
-## 23003   10 scoreSecond    10
-## 23004   10 scoreSecond    10
+##                  name    variable        value
+## 6570              '71       score 7.200000e+00
+## 14238             '71       gross 3.062178e+06
+## 21906             '71 scoreSecond 8.009589e+00
+## 1014   'night, Mother       score 7.600000e+00
+## 8682   'night, Mother       gross 4.418630e+05
+## 16350  'night, Mother scoreSecond 8.809589e+00
+## 1007  'Round Midnight       score 7.400000e+00
+## 8675  'Round Midnight       gross 3.272593e+06
+## 16343 'Round Midnight scoreSecond 8.409589e+00
+## 5643           [Rec]²       score 6.500000e+00
 \end{verbatim}
 \begin{alltt}
 \hlcom{# Converting from long to wide format}
 \hlcom{#deer_wide_again <- reshape2::dcast(deer_long, SkullID ~ variable)}
-\hlstd{dataMoviesScoresGrossWide} \hlkwb{=} \hlstd{reshape2}\hlopt{::}\hlkwd{dcast}\hlstd{(}\hlkwc{data} \hlstd{= dataMoviesScoresGrossLong,}
-                                            \hlkwc{value.var}\hlstd{=}\hlstr{"value"}\hlstd{, mean,}
-                                            \hlkwc{formula} \hlstd{= name} \hlopt{~} \hlstd{variable)}
+\hlstd{dataMoviesScoresGrossWide} \hlkwb{<-} \hlstd{reshape2}\hlopt{::}\hlkwd{dcast}\hlstd{(}\hlkwc{data} \hlstd{= dataMoviesScoresGrossLong,}
+                                            \hlkwc{value.var}\hlstd{=}\hlstr{"value"}\hlstd{, mean,} \hlkwc{formula} \hlstd{= name} \hlopt{~} \hlstd{variable)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -452,18 +453,18 @@ Long format: for each data point there are many rows as the number of variables.
 \end{alltt}
 \begin{verbatim}
 ## 
-##     10     40 Female   Male   <NA> 
-##   1225    331   2059   3088    965
+## Female   Male   <NA> 
+##   2545   3817   1306
 \end{verbatim}
 \begin{alltt}
 \hlcom{# Extracting data with complete cases across the entire columns}
-\hlstd{has_all_measurements} \hlkwb{=} \hlkwd{complete.cases}\hlstd{(dataMovies)}
-\hlstd{dataMoviesComplete} \hlkwb{=} \hlstd{dataMovies[has_all_measurements, ]}
-\hlcom{# dataMovies[has_all_measurements, ] is same as dataMovies[has_all_measurements==TRUE, ]}
+\hlstd{has_all_measurements} \hlkwb{<-} \hlkwd{complete.cases}\hlstd{(dataMovies)}
+\hlstd{dataMoviesComplete} \hlkwb{<-} \hlstd{dataMovies[has_all_measurements, ]}
+\hlcom{# dataMovies[has_all_measurements, ] is the same as dataMovies[has_all_measurements==TRUE, ]}
 \hlcom{# dataMoviesComplete = na.omit(dataMovies) # does the same job}
 
 \hlcom{# Extracting data with at least one incomplete case across the entire columns}
-\hlstd{dataMoviesIncomplete} \hlkwb{=} \hlstd{dataMovies[has_all_measurements} \hlopt{==} \hlnum{FALSE}\hlstd{, ]}
+\hlstd{dataMoviesIncomplete} \hlkwb{<-} \hlstd{dataMovies[has_all_measurements} \hlopt{==} \hlnum{FALSE}\hlstd{, ]}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -475,13 +476,13 @@ Long format: for each data point there are many rows as the number of variables.
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Creating a logical vector for score status (missing or available)}
-\hlstd{is_score_missing} \hlkwb{=} \hlkwd{is.na}\hlstd{(dataMovies}\hlopt{$}\hlstd{score)}
+\hlstd{is_score_missing} \hlkwb{<-} \hlkwd{is.na}\hlstd{(dataMovies}\hlopt{$}\hlstd{score)}
 \hlkwd{table}\hlstd{(is_score_missing)}
 \end{alltt}
 \begin{verbatim}
 ## is_score_missing
-## FALSE 
-##  7668
+## FALSE  TRUE 
+##  7665     3
 \end{verbatim}
 \begin{alltt}
 \hlcom{# Alternative solution}
@@ -489,8 +490,8 @@ Long format: for each data point there are many rows as the number of variables.
 \hlcom{# summary(dataMovies$score)}
 
 \hlcom{# Creating data with missing scores}
-\hlstd{dataMoviesIncompleteScore} \hlkwb{=} \hlstd{dataMovies[is_score_missing,]}
-\hlstd{dataMoviesCompleteScore} \hlkwb{=} \hlstd{dataMovies[}\hlopt{!}\hlstd{is_score_missing,]}
+\hlstd{dataMoviesIncompleteScore} \hlkwb{<-} \hlstd{dataMovies[is_score_missing,]}
+\hlstd{dataMoviesCompleteScore} \hlkwb{<-} \hlstd{dataMovies[}\hlopt{!}\hlstd{is_score_missing,]}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -500,8 +501,8 @@ Long format: for each data point there are many rows as the number of variables.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{condition} \hlkwb{=} \hlkwd{with}\hlstd{(}\hlkwc{data} \hlstd{= dataMovies,} \hlkwc{expr} \hlstd{= (}\hlkwd{is.na}\hlstd{(gross)} \hlopt{|} \hlkwd{is.na}\hlstd{(sexDirector)) )}
-\hlstd{dataMoviesMissingGrosOrSexDirector} \hlkwb{=} \hlstd{dataMovies[}\hlopt{!}\hlstd{condition,]}
+\hlstd{condition} \hlkwb{<-} \hlkwd{with}\hlstd{(}\hlkwc{data} \hlstd{= dataMovies,} \hlkwc{expr} \hlstd{= (}\hlkwd{is.na}\hlstd{(gross)} \hlopt{|} \hlkwd{is.na}\hlstd{(sexDirector)) )}
+\hlstd{dataMoviesMissingGrosOrSexDirector} \hlkwb{<-} \hlstd{dataMovies[}\hlopt{!}\hlstd{condition,]}
 \end{alltt}
 \end{kframe}
 \end{knitrout}

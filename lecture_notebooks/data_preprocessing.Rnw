@@ -19,7 +19,7 @@
     $^{1}$Department of Epidemiology, Helmholtz Centre for Infection Research, Braunschweig, Germany\\%
    % $^2$Organization 2\\[2ex]%
    \vspace{2em} 
-    \today
+   Version on \today
 }
 \begin{document}
 
@@ -60,18 +60,18 @@ As an example we want to use a \texttt{.csv} file which stores data about movies
 % through Rstudio wizard
 <<loading_data, eval=TRUE, echo=TRUE>>=
 setwd("~/Introduction-to-R-programming/lecture_notebooks")
-dataMovies = read.csv("./data/movies.csv") 
+dataMovies <- read.csv("./data/movies.csv") 
 @
 \noindent \texttt{.} in the file path represents the current working directory and  can be printed using \texttt{getwd()} command.
 
 <<Formatting_data, eval=TRUE, echo=F, results='hide'>>=
-dataMovies$drugUse = sample(c("Yes", "No"), 
+dataMovies$drugUse <- sample(c("Yes", "No"), 
                        size = nrow(dataMovies), replace = T) 
-dataMovies$sexDirector = sample(c("Male", "male", "M","Female", "f", NA), 
+dataMovies$sexDirector <- sample(c("Male", "male", "M","Female", "f", NA), 
                        size = nrow(dataMovies), replace = T) 
-dataMovies$yearCurrent = rep(2023, nrow(dataMovies))
+dataMovies$yearCurrent <- rep(2023, nrow(dataMovies))
 # adding a second score to the data
-dataMovies$scoreSecond = dataMovies$score + (dataMovies$score - mean(dataMovies$score, na.rm = T))
+dataMovies$scoreSecond <- dataMovies$score + (dataMovies$score - mean(dataMovies$score, na.rm = T))
 
 @
 
@@ -111,20 +111,20 @@ After reading this section, you should be able to do th following:
 
 <<deduplication, message=FALSE>>=
 # checking if there are duplicates
-dataName = data.frame(table(dataMovies$name))
-duplicateNames = dataName[dataName$Freq >1,] 
+dataName <- data.frame(table(dataMovies$name))
+duplicateNames <- dataName[dataName$Freq >1,] 
 dim(duplicateNames)
 View(dataMovies[dataMovies$name == "Anna",])
 
 # Deleting rows with duplicate names at random
 library(dplyr)
-dataMoviesDistinctName = dplyr::distinct(dataMovies, name, .keep_all = TRUE)
+dataMoviesDistinctName <- dplyr::distinct(dataMovies, name, .keep_all = TRUE)
 
 # Deleting rows with duplicate year and score
-dataMoviesDistinctYearScore = dplyr::distinct(dataMovies, year, score, .keep_all = TRUE)
+dataMoviesDistinctYearScore <- dplyr::distinct(dataMovies, year, score, .keep_all = TRUE)
 
 # Deleting rows with duplicates for all the columns
-dataMoviesDistinctAll = dplyr::distinct(dataMovies, .keep_all = TRUE)
+dataMoviesDistinctAll <- dplyr::distinct(dataMovies, .keep_all = TRUE)
 nrow(dataMoviesDistinctAll) # The same as dataMovies
 @
 %%---------------------------------
@@ -138,13 +138,13 @@ nrow(dataMoviesDistinctAll) # The same as dataMovies
 \noindent \textbf{Example:} Compute new variables, for for the total score and another for how old a movie is.\vspace{1em} 
 
 <<adding_columns>>=
-dataMovies$age  = dataMovies$yearCurrent - dataMovies$year
-dataMovies$scoreTotal  = dataMovies$score + dataMovies$scoreSecond
+dataMovies$age  <- dataMovies$yearCurrent - dataMovies$year
+dataMovies$scoreTotal  <- dataMovies$score + dataMovies$scoreSecond
 head(dataMovies, 3)[, c(1,20:ncol(dataMovies))]
 @
 \noindent Using the the command \texttt{within} reduces typing effort and leads to clean code.
 <<adding_columns_within>>=
-dataMovies = within(
+dataMovies <- within(
 data = dataMovies,
 expr = {
 age = yearCurrent - year
@@ -214,22 +214,22 @@ Data values can be recorded with \textit{errors}. For example, age of 114 yrs fo
 table(is.na(dataMovies$age)) # checking for missing data
 summary(dataMovies$age) # Summary of age 
 # Filtering records with age less than 10 or grater than 40
-dataMoviesAgeNot10to40 = dataMovies[(dataMovies$age < 10 | dataMovies$age > 40), ]
+dataMoviesAgeNot10to40 <- dataMovies[(dataMovies$age < 10 | dataMovies$age > 40), ]
 #Counting number of records
 nrow(dataMoviesAgeNot10to40) # or dim(dataMoviesAgeNot10to40)[1]
 # Alternately, we can negate the condition to filter for age between 10 to 40
-dataMoviesAge10to40 = dataMovies[!(dataMovies$age < 10 | dataMovies$age > 40), ]
+dataMoviesAge10to40 <- dataMovies[!(dataMovies$age < 10 | dataMovies$age > 40), ]
 # OR 
-dataMoviesAge10to40 = dataMovies[(dataMovies$age >= 10 & dataMovies$age <= 40), ]
+dataMoviesAge10to40 <- dataMovies[(dataMovies$age >= 10 & dataMovies$age <= 40), ]
 
 # Replacing numeric variables
 # Copying age to a new column called ageImputed 
 # It is not advisable to manipulate existing variables
-dataMovies$ageImputed = dataMovies$age
+dataMovies$ageImputed <- dataMovies$age
 # Replacing ages less than 10 with 10
-dataMovies[dataMovies$ageImputed < 10, ] = 10
+dataMovies$ageImputed[dataMovies$ageImputed < 10] <- 10
 # Replacing ages greater than 40 with 40
-dataMovies[dataMovies$ageImputed > 40, ] = 40
+dataMovies$ageImputed[dataMovies$ageImputed > 40] <- 40  # do this same task using within function
 @
 
 \noindent \textbf{Homework:} Write a function that compute the median \texttt{score} and assign its value to all records having missing values for \texttt{score}.
@@ -244,15 +244,15 @@ dataMovies[dataMovies$ageImputed > 40, ] = 40
 
 \noindent Sorting involves \textit{arranging} data into some  \textit{meaningful order} to make it easier to understand or analyse. \vspace{1em}
 
-\noindent \textbf{Example:} Sort \texttt{dataMovies} using the following variables: (a) \texttt{year} , (a) \texttt{rating} , (a) \texttt{score} and \texttt{votes}. 
+\noindent \textbf{Example:} Sort \texttt{dataMovies} using the following variables: (a) \texttt{year} , (b) \texttt{rating} , (c) \texttt{score} and \texttt{votes}. 
 
 <<sorting_columns>>=
 # Sorting by year (integer)
-dataMoviesSortYear =  dataMovies[order(dataMovies$year), ]
-# Use vector[order(vector)] # to sort a vector
+dataMoviesSortYear <-  dataMovies[order(dataMovies$year), ]
+# Use the general form "vector[order(vector)]" # to sort a vector
 
 # Sorting by rating (character)
-dataMoviesSortRating =  dataMovies[order(dataMovies$rating, decreasing = T), ]
+dataMoviesSortRating <-  dataMovies[order(dataMovies$rating, decreasing = T), ]
 
 # Sorting by score (numeric) and rating (character), Order matters!
 dataMoviesSortScoreRating =  dataMovies[order(dataMovies$score, dataMovies$rating), ]
@@ -286,17 +286,19 @@ Long format: for each data point there are many rows as the number of variables.
 <<wide_to_long>>=
 library(reshape2)
 # Converting from wide to long format
-dataMoviesScoresGross = dataMovies[, colnames(dataMovies) %in% 
+dataMoviesScoresGross <- dataMovies[, colnames(dataMovies) %in% 
                                      c("name", "score", "scoreSecond",  "gross")] 
 dataMoviesScoresGrossLong = melt(data = dataMoviesScoresGross, id.vars = "name")
-head(dataMoviesScoresGrossLong,3)
-tail(dataMoviesScoresGrossLong, 3 )
+
+dataMoviesSortScoreRatingWith = dataMovies[with(dataMovies, order(score, rating)), ]
+
+
+head(dataMoviesScoresGrossLong[with(dataMoviesScoresGrossLong, order(name)),], 10)
 
 # Converting from long to wide format
 #deer_wide_again <- reshape2::dcast(deer_long, SkullID ~ variable)
-dataMoviesScoresGrossWide = reshape2::dcast(data = dataMoviesScoresGrossLong, 
-                                            value.var="value", mean, 
-                                            formula = name ~ variable)
+dataMoviesScoresGrossWide <- reshape2::dcast(data = dataMoviesScoresGrossLong, 
+                                            value.var="value", mean, formula = name ~ variable)
 @
 
 %\noindent \textbf{Quick exercise:} 
@@ -318,13 +320,13 @@ dataMoviesScoresGrossWide = reshape2::dcast(data = dataMoviesScoresGrossLong,
 table(dataMovies$sexDirectorClean, useNA = "always") 
 
 # Extracting data with complete cases across the entire columns
-has_all_measurements = complete.cases(dataMovies)
-dataMoviesComplete = dataMovies[has_all_measurements, ]
-# dataMovies[has_all_measurements, ] is same as dataMovies[has_all_measurements==TRUE, ]
+has_all_measurements <- complete.cases(dataMovies)
+dataMoviesComplete <- dataMovies[has_all_measurements, ]
+# dataMovies[has_all_measurements, ] is the same as dataMovies[has_all_measurements==TRUE, ]
 # dataMoviesComplete = na.omit(dataMovies) # does the same job
 
 # Extracting data with at least one incomplete case across the entire columns
-dataMoviesIncomplete = dataMovies[has_all_measurements == FALSE, ]
+dataMoviesIncomplete <- dataMovies[has_all_measurements == FALSE, ]
 @
 
 \noindent How can we address missing values in our analysis? A statistical method called Multiple Imputation (MI) can be used. MI is beyond the scope of this course. However, the  \href{https://cran.r-project.org/web/packages/mice/index.html}{mice}  package is a good references to look at if needed. \vspace{1em} 
@@ -332,22 +334,22 @@ dataMoviesIncomplete = dataMovies[has_all_measurements == FALSE, ]
 \noindent \textbf{Example 2:} How many movies have missing \texttt{score}. Remember that \texttt{score} is a numeric vector. Create a data set called  \texttt{dataMoviesIncompleteScore} having only records with  missing scores.
 <<dealing_with_na>>=
 # Creating a logical vector for score status (missing or available)
-is_score_missing = is.na(dataMovies$score)
+is_score_missing <- is.na(dataMovies$score)
 table(is_score_missing)
 # Alternative solution
 # summary(dataMovies)
 # summary(dataMovies$score)
 
 # Creating data with missing scores
-dataMoviesIncompleteScore = dataMovies[is_score_missing,]
-dataMoviesCompleteScore = dataMovies[!is_score_missing,]
+dataMoviesIncompleteScore <- dataMovies[is_score_missing,]
+dataMoviesCompleteScore <- dataMovies[!is_score_missing,]
 @
 
 \noindent \textbf{Quick exercise:} Create a data excluding missing values for  \texttt{gross} or  \texttt{sexDirector}. Are there records with missing values for  \texttt{budget} and  \texttt{gross}?
 
 <<dealing_with_multiple_na>>=
-condition = with(data = dataMovies, expr = (is.na(gross) | is.na(sexDirector)) )
-dataMoviesMissingGrosOrSexDirector = dataMovies[!condition,]
+condition <- with(data = dataMovies, expr = (is.na(gross) | is.na(sexDirector)) )
+dataMoviesMissingGrosOrSexDirector <- dataMovies[!condition,]
 @
 
 \noindent \textbf{Quick Exercise:} A few cells  in the column rating of  \texttt{dataMovies} are empty. Count the number of empty cells and replace them with  \texttt{NA}, the rightful notation.
