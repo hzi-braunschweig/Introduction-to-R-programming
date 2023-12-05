@@ -343,10 +343,9 @@ summary(mtcars$mpg)
 ```
 
 That may answer some of our question regarding the over all fuel
-consumptions of the cars in the data set, but it es not very easy to
-gasp and gets very overwhelming if we want to compare different
-distributions of fuel consumption (e.g. distinguished by number of
-cylinders).
+consumption of the cars in the data set, but it es not very easy to gasp
+and gets very overwhelming if we want to compare different distributions
+of fuel consumption (e.g. distinguished by number of cylinders).
 
 ### Using base R
 
@@ -388,10 +387,45 @@ boxplot(mpg ~ cyl + gear, data = mtcars)
 ```
 
 As before with other plots we have some basic options to manipulate the
-appearance of the plots.
+appearance of the plots, e.g. add labels.
 
 ```{r}
-boxplot(mtcars$mpg, horizontal = TRUE)
+boxplot(mtcars$mpg,
+        main="Boxplot von mpg gruppiert nach cyl",
+        xlab="Zylinder (cyl)", ylab="Miles per Gallon (mpg)")
+```
+
+We can also manually adjust the names of the groupes
+
+```{r}
+boxplot(mpg ~ vs, data = mtcars, names  = c("V-shaped", "Straight"))
+```
+
+### Using ggplot2 package
+
+Again for further and more specific adjustment we could use `ggplot2`
+instead of base **R**.
+
+As with nearly every plot done with `ggplot` we start with making
+`ggplot` familiar with the data we are using and which parts we want to
+visualize. As before we want to use the data set `mtcars` and display
+the fuel consumption `mpg`. We want to display the box plot vertically
+we assign the variable `mpg` to the y-axis.
+
+```{r}
+ggplot(mtcars, aes(y = mpg)) + 
+  geom_boxplot() + 
+  labs(title = "Boxplot fuel consumption",
+       y = "Miles per Gallon (mpg)")
+```
+
+When we want to plot box plot the data grouped in the different numbers
+of cylinders `cyl` we have to make sure that the variable we use to
+group the data is a factor. We can achieve this by using `as.factor()`.
+
+```{r}
+ggplot(mtcars, aes(x = as.factor(cyl), y = mpg)) +
+  geom_boxplot()
 ```
 
 ## Histogram
