@@ -317,6 +317,24 @@ geom_line(aes(y = -Min.Depth), colour = "darkgrey")
 
 ## Box plot
 
+We will now discuss the usage of box plots as a visualization.
+
+```{r}
+head(mtcars)
+```
+
+```{r}
+median(mtcars$am)
+```
+
+```{r}
+boxplot(mtcars$mpg)
+```
+```{r}
+boxplot(mpg ~ gear, data = mtcars)
+```
+
+
 ## Histogram
 
 ## Bar chart
