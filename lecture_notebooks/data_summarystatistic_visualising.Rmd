@@ -249,7 +249,8 @@ It provides information about trend.
 
 ```{r}
 # Extracting data from package
-data(crab_tag, package = "learningr")
+#data(crab_tag, package = "learningr")
+load(file = "data/crab_tag.rda")
 crab_tag_daylog = crab_tag$daylog 
 str(crab_tag_daylog)
 ```
