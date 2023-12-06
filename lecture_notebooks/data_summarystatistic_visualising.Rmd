@@ -317,6 +317,124 @@ geom_line(aes(y = -Min.Depth), colour = "darkgrey")
 
 ## Box plot
 
+A box plot is a visualization of the distribution of numerical data.
+Will we use the data set `mtcars` which incorporates fuel consumption
+and ten aspects design and performance for 32 different cars. First we
+have a short look into our data.
+
+```{r}
+head(mtcars)
+```
+
+Since this data set is part of base **R**, we can use the R help to get
+a better understanding what the columns mean.
+
+```{r}
+?mtcars
+```
+
+Lets say we are interested in the distribution of the fuel consumption
+`mpg` of the different cars. As we have seen before we can use the
+`summary` function to get a (numerical) overview about the distribution
+of the data.
+
+```{r}
+summary(mtcars$mpg)
+```
+
+That may answer some of our question regarding the over all fuel
+consumption of the cars in the data set, but it es not very easy to gasp
+and gets very overwhelming if we want to compare different distributions
+of fuel consumption (e.g. distinguished by number of cylinders).
+
+### Using base R
+
+Using a box plot for visualizing puts all the above information in one
+graphic.
+
+```{r}
+boxplot(mtcars$mpg)
+```
+
+Since the single plot includes all the information from before it needs
+some information to be understood completely.
+
+-   The Median is marked by the thick black line inside the grey box.
+
+-   The 1st and 3rd quartile are the lower and upper end of the grey
+    box, therefore $50\%$ of the values, including the median, are
+    located inside the grey box.
+
+-   The two antennas/whiskers give the range including (roughly) $95\%$
+    of the data points.
+
+-   Values outside this range are sometimes depicted as singular data
+    points.
+
+We can also use box plots to quickly compare the distribution of the
+fuel consumption for different number of cylinders `cyl` or number of
+gears `gear`.
+
+To do that we have to give `boxplot` a so called formula describing the
+relation we are interested in. A formula connects the (numeric) variable
+we are interested in (e.g. `mgp`) via `~` with the grouping variables,
+such as `cyl` or `gear`, usually a factor.
+
+```{r}
+boxplot(mpg ~ cyl, data = mtcars)
+boxplot(mpg ~ gear, data = mtcars)
+boxplot(mpg ~ cyl + gear, data = mtcars)
+```
+
+As before with other plots we have some basic options to manipulate the
+appearance of the plots, e.g. add labels.
+
+```{r}
+boxplot(mtcars$mpg,
+        main="Boxplot von mpg gruppiert nach cyl",
+        xlab="Zylinder (cyl)", ylab="Miles per Gallon (mpg)")
+```
+
+We can also manually adjust the names of the groupes
+
+```{r}
+boxplot(mpg ~ vs, data = mtcars, names  = c("V-shaped", "Straight"))
+```
+
+### Using ggplot2 package
+
+Again for further and more specific adjustment we could use `ggplot2`
+instead of base **R**.
+
+```{r}
+library(ggplot2)
+```
+
+As with nearly every plot done with `ggplot` we start with making
+`ggplot` familiar with the data we are using and which parts we want to
+visualize. As before we want to use the data set `mtcars` and display
+the fuel consumption `mpg`. We want to display the box plot vertically
+we assign the variable `mpg` to the y-axis.
+
+```{r}
+ggplot(mtcars, aes(y = mpg)) + 
+  geom_boxplot() + 
+  labs(title = "Boxplot fuel consumption",
+       y = "Miles per Gallon (mpg)")
+```
+
+When we want to plot box plot the data grouped in the different numbers
+of cylinders `cyl` we have to make sure that the variable we use to
+group the data is a factor. We can achieve this by using `as.factor()`.
+
+```{r}
+ggplot(mtcars, aes(x = as.factor(cyl), y = mpg)) +
+  geom_boxplot() +
+  labs(title = "Boxplot fuel consumption",
+       x = "Number of cylinder (cyl)",
+       y = "Miles per Gallon (mpg)")
+```
+
 ## Histogram
 
 ## Bar chart
