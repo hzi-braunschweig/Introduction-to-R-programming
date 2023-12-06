@@ -437,6 +437,95 @@ ggplot(mtcars, aes(x = as.factor(cyl), y = mpg)) +
 
 ## Histogram
 
+Histograms are a very basic way to display a approximation of the
+distribution of a given variable. In this example we want visualize the
+data in `airquality` that include measurements on New York from May to
+September 1973.
+
+First we have a short look into the data.
+
+```{r}
+head(airquality)
+```
+
+In the following we want to visualize the distributions of wind speed
+(measured in miles per hour). To get a first impression of the range of
+that variable we use `summary()`.
+
+```{r}
+summary(airquality$Wind)
+```
+
+### Using base R
+
+We want to use histograms to get a visual impression of the recorded
+wind speeds. A histogram uses bins to collect ranges of data and depicts
+the number of data points in each bin by its height. In base **R** we
+can easily create such a plot by using `hist()`. Without additional
+arguments **R** will distribute the 'bins' on its own, but we can also
+manually adjust the number or width of the used 'bins' by the argument
+`breaks`.
+
+```{r}
+hist(airquality$Wind,
+     xlab = "Wind speed")
+
+hist(airquality$Wind, breaks = 25,#c(0,seq(5,15,2), 21),
+     xlab = "Wind speed")
+```
+
+Since it would be interesting to compare the distribution of wind speeds
+for different months, we want to directly compare two histograms with
+each other.
+
+```{r}
+hist(airquality[airquality$Month == 5,]$Wind,
+     breaks = c(0,seq(5,15,2), 21), col = rgb(1,0,0,0.5),
+     xlab = "Wind speed", main = "")
+
+hist(airquality[airquality$Month == 8,]$Wind,
+     breaks = c(0,seq(5,15,2), 21), col = rgb(0,0,1,0.5),
+     add = TRUE)
+```
+
+### Using ggplot2 package
+
+We want to show the way histograms could be created with `ggplot2`. In
+case you have not loaded `ggplot2` please execute the following line.
+
+```{r}
+library(ggplot2)
+```
+
+As always with `ggplot2` we first have to tell what data we are using by
+`ggplot()` and specifying what variable we are interested in. Afterwards
+we can create the histogram with `geom_histogram()`. As before not
+giving any information about the wanted bins leads to `ggplot` deciding
+how to distribute the bins according to the data. We can either choose
+the number of bins by `bins`, the width of the bins by `binwidth` or
+specify where to separate between bins with `breaks`. Each of these
+arguments overwrites the use of the former.
+
+```{r}
+ggplot(airquality, aes(x = Wind)) +
+  geom_histogram()
+
+ggplot(airquality, aes(x = Wind)) +
+  geom_histogram(breaks = c(0,seq(5,15,2), 21))
+```
+
+We can also use `ggplot2` compare two (or more) histograms with each
+other. In contrast to base R we do this in one single command using
+`Month` as a factor (notice that we have selected the data for only two
+different months in the first argument).
+
+```{r}
+ggplot(airquality[airquality$Month %in% c(5,8),],
+       aes(x = Wind, fill = as.factor(Month))) +
+  geom_histogram(position="identity", alpha=0.5, breaks=c(0,seq(5,15,2), 21)) +
+  scale_fill_manual(values = c(rgb(1,0,0,0.5), rgb(0,0,1,0.5)))
+```
+
 ## Bar chart
 
 ## Additional visulisations using gglot2 package
