@@ -1,0 +1,460 @@
+---
+title: ' Summary statistics and visualisations'
+author: "Bernard Silenou and Henrik Schanze"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    theme: united
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+-   After imparting and cleaning your data, the next aim before
+    modelling is to understand your data.
+-   Essential tools to attain this aim are *summary statistics* and
+    *plots*.
+
+## Goals
+
+-   Be able to calculate a range of summary statistics on numeric data
+-   Be able to draw plots and export out of R
+
+# Summary statistics
+
+-   Summary statistics are used to summarize a data in order to
+    communicate the largest amount of information as simply as possible.
+
+-   Measures often used are arithmetic mean, variance or standard
+    deviation, and correlation coefficient.
+
+-   The *obama_vs_mccain* dataset contains the fractions of people
+    voting for Obama and McCain in the 2008 US presidential elections.
+
+-   We load this data from the R package *learningr* and use it in
+    subsequent examples:
+
+```{r}
+#data(package = "learningr") # to print the names of dataset in the package learningr
+#data(obama_vs_mccain, package = "learningr")
+load(file ="data/obama_vs_mccain.rda")
+votesObama = obama_vs_mccain$Obama
+```
+
+Let {x} be the votes for Obama.
+
+### Measure of location:
+
+`mean(x)`: sum of x divided by the length
+
+```{r}
+mean(votesObama)
+```
+
+`median(x)`: 50% of x is above and 50% is below
+
+```{r}
+median(votesObama)
+```
+
+### Measure of rank:
+
+`min(x)`: minimum value of x
+
+```{r}
+min(votesObama)
+```
+
+`max(x)`: maximum value of x
+
+```{r}
+max(votesObama)
+```
+
+`quantile(x, 0.25)`: 25% of x is below this value; `quantile(x, 0.50)`==
+median(x)
+
+```{r}
+quantile(votesObama, 0.50)
+median(votesObama)
+quantile(votesObama)
+```
+
+### Measure of variation:
+
+`sd(x)`: standard deviation, square sd to get variance or use `var(x)`
+
+```{r}
+sd(votesObama)
+var(votesObama) 
+sd(votesObama)**2
+```
+
+`range(x)`: gives min and max values
+
+```{r}
+range(votesObama)
+```
+
+`IQR(x)`: interquartile range == 75th percentile minus 25th percentile
+
+```{r}
+IQR(votesObama)
+```
+
+### Measure of position or count:
+
+`x[1]`: first element in x
+
+```{r}
+votesObama[1]
+```
+
+`x[length(x)]`: last element in x
+
+```{r}
+votesObama[length(votesObama)]
+```
+
+**Quick exercise**: what is the last last but one element in
+`votsObama`?
+
+### Other summary statistics functions:
+
+`summary(x)`: generic function to compute multiple statistics at once
+
+```{r}
+summary(votesObama)
+summary(obama_vs_mccain)
+```
+
+`length(x)`: the number of element in x
+
+```{r}
+length(votesObama)
+dim(obama_vs_mccain)
+dim(obama_vs_mccain)[1] # the same as nrow(obama_vs_mccain)
+dim(obama_vs_mccain)[2] # the same as ncol(obama_vs_mccain)
+```
+
+`table(is.na(x))`: count the number of missing and non missing values
+
+```{r}
+table(is.na(votesObama))
+```
+
+`length(unique(x))`: count the number of unique value
+
+```{r}
+length(unique(obama_vs_mccain$Region))
+```
+
+`cor(x)`: calculates correlations between numeric vectors, "pearson"
+(default)
+
+```{r}
+cor(obama_vs_mccain$Obama, obama_vs_mccain$McCain)
+```
+
+`cov(x)`: calculates covariance between numeric vectors, "pearson"
+(default)
+
+```{r}
+with(obama_vs_mccain, cov(Obama, McCain)) # the same as cov(obama_vs_mccain$Obama, obama_vs_mccain$McCain)
+```
+
+# Visulisations
+
+## Systems of plots
+
+R has three systems of graphics: *base*, *grid*, and *lattice*.
+
+**Base graphics** is easy to get started with but hard to extend to new
+graph types. It will be used for a greater part of this section.
+
+**Grid graphics** provides greater flexibility but require writing much
+lines of code. Example is package ggplot2--most modern and widely used.
+
+**Lattice graphics** is built on top of the grid system, providing
+high-level functions for all the common plot types. Plot output can be
+saved as objects, edited and later plotted.
+
+The three systems are, sadly, mostly incompatible, thus recommended to
+choose one system for a project. ggplot2 is a good choice.
+
+## Scatter plot
+
+It is used to explore the relationship between two continuous variables
+
+### Using base R
+
+Example: Does voters *Income* affect *Turnout* at the polls?
+
+`plot(x)` to plot scatter plot. NA are omitted by default.
+
+```{r}
+# Deleting NA
+obama_vs_mccain_turnout_non_na = obama_vs_mccain[!is.na(obama_vs_mccain$Turnout), ]
+# plotting scatter plot
+plot(obama_vs_mccain_turnout_non_na$Income, obama_vs_mccain_turnout_non_na$Turnout)
+# or using with command
+with(obama_vs_mccain_turnout_non_na, plot(Income, Turnout))
+```
+
+We can edit the plot by using various parameters as described in the
+help document `? plot` or `?? plot`
+
+```{r}
+with(obama_vs_mccain_turnout_non_na, plot(Income, Turnout, type = "p", main = "Scatter plot of Turnout versus Incoms",
+                                          sub= "Obaba Vs McCain", xlab = "varage income", ylab = "Turnout percentage",
+                                          col = "red", pch = 19, cex = 1.5 ))
+```
+
+Positive correlation between income and turnout
+
+### Using ggplot2 package
+
+Example: Does voters *Income* affect *Turnout* at the polls?
+
+`ggplot()` to construct a plot. It takes a *dataframe* as its first
+argument and an *aesthetic* as its second.
+
+`geom_...()` to add e.g. points/line on the plot
+
+```{r}
+library(ggplot2)
+gg1 = ggplot(obama_vs_mccain_turnout_non_na, aes(Income, Turnout, colour = Region)) + # colour points by region
+geom_point(shape = 20)
+print(gg1)
+```
+
+To draw individual plots for each region, we add a *facet* using the
+function `facet_wrap`.
+
+```{r}
+gg2 = gg1 + 
+  facet_wrap(~ Region, ncol = 5) +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))   # to rotate x axis
+plot(gg2)
+  
+```
+
+## Line plot
+
+It is often used to explore how a continuous variable changes over time.
+It provides information about trend.
+
+**Data:** we will use the crab data **crab_tag** in this section.
+
+```{r}
+# Extracting data from package
+#data(crab_tag, package = "learningr")
+load(file = "data/crab_tag.rda")
+crab_tag_daylog = crab_tag$daylog 
+str(crab_tag_daylog)
+```
+
+### Using base R
+
+**Example**: Draw a line plot of max depth against date
+
+`plot(x)` to plot line plot, just as scatter plot but with the option
+`type = "l"`. The `plot()` function can be used to plot many other types
+of plot.
+
+```{r}
+# Drawing line plot
+with(
+crab_tag_daylog,
+plot(Date, Max.Depth, type = "l")
+)
+```
+
+Inverting the y axis and assigning limits to make it look nice
+
+```{r}
+with(
+crab_tag_daylog,
+plot(Date, -Max.Depth, type = "l", ylim = c(-max(Max.Depth)-10, 10)) 
+)
+```
+
+Example: Draw a line plot for max and min depth against date on the same
+figure using different colours.
+
+`lines()` To draw additional lines on an existing plot. The equivalent
+for scatterplot is `points()`.
+
+```{r}
+with(
+crab_tag_daylog,
+plot(Date, -Max.Depth, type = "l", ylim = c(-max(Max.Depth)-10, 10)) 
+)
+# Adding the lines for min depth on the existing plot of max depth
+with(
+crab_tag$daylog,
+lines(Date, -Min.Depth, col = "blue")
+)
+```
+
+**Quick Exercise**: On the scatter plot of turnout Vs income plotted in
+previous section, increase the income by 300 and plot the new scatter
+plot on the existing plot. Use different colours.
+
+### Using ggplot2 package
+
+**Example**: Draw a line plot of max depth against date
+
+Swapping a scatter plot for a line plot is as simple as swapping
+`geom_point` for `geom_line`
+
+```{r}
+ggplot(crab_tag_daylog, aes(Date)) +
+geom_line(aes(y = -Max.Depth), colour = "#a83b48") + # google "colour picker" to get the codes
+geom_line(aes(y = -Min.Depth), colour = "darkgrey")
+```
+
+## Box plot
+
+A box plot is a visualization of the distribution of numerical data.
+Will we use the data set `mtcars` which incorporates fuel consumption
+and ten aspects design and performance for 32 different cars. First we
+have a short look into our data.
+
+```{r}
+head(mtcars)
+```
+
+Since this data set is part of base **R**, we can use the R help to get
+a better understanding what the columns mean.
+
+```{r}
+?mtcars
+```
+
+Lets say we are interested in the distribution of the fuel consumption
+`mpg` of the different cars. As we have seen before we can use the
+`summary` function to get a (numerical) overview about the distribution
+of the data.
+
+```{r}
+summary(mtcars$mpg)
+```
+
+That may answer some of our question regarding the over all fuel
+consumption of the cars in the data set, but it es not very easy to gasp
+and gets very overwhelming if we want to compare different distributions
+of fuel consumption (e.g. distinguished by number of cylinders).
+
+### Using base R
+
+Using a box plot for visualizing puts all the above information in one
+graphic.
+
+```{r}
+boxplot(mtcars$mpg)
+```
+
+Since the single plot includes all the information from before it needs
+some information to be understood completely.
+
+-   The Median is marked by the thick black line inside the grey box.
+
+-   The 1st and 3rd quartile are the lower and upper end of the grey
+    box, therefore $50\%$ of the values, including the median, are
+    located inside the grey box.
+
+-   The two antennas/whiskers give the range including (roughly) $95\%$
+    of the data points.
+
+-   Values outside this range are sometimes depicted as singular data
+    points.
+
+We can also use box plots to quickly compare the distribution of the
+fuel consumption for different number of cylinders `cyl` or number of
+gears `gear`.
+
+To do that we have to give `boxplot` a so called formula describing the
+relation we are interested in. A formula connects the (numeric) variable
+we are interested in (e.g. `mgp`) via `~` with the grouping variables,
+such as `cyl` or `gear`, usually a factor.
+
+```{r}
+boxplot(mpg ~ cyl, data = mtcars)
+boxplot(mpg ~ gear, data = mtcars)
+boxplot(mpg ~ cyl + gear, data = mtcars)
+```
+
+As before with other plots we have some basic options to manipulate the
+appearance of the plots, e.g. add labels.
+
+```{r}
+boxplot(mtcars$mpg,
+        main="Boxplot von mpg gruppiert nach cyl",
+        xlab="Zylinder (cyl)", ylab="Miles per Gallon (mpg)")
+```
+
+We can also manually adjust the names of the groupes
+
+```{r}
+boxplot(mpg ~ vs, data = mtcars, names  = c("V-shaped", "Straight"))
+```
+
+### Using ggplot2 package
+
+Again for further and more specific adjustment we could use `ggplot2`
+instead of base **R**.
+
+```{r}
+library(ggplot2)
+```
+
+As with nearly every plot done with `ggplot` we start with making
+`ggplot` familiar with the data we are using and which parts we want to
+visualize. As before we want to use the data set `mtcars` and display
+the fuel consumption `mpg`. We want to display the box plot vertically
+we assign the variable `mpg` to the y-axis.
+
+```{r}
+ggplot(mtcars, aes(y = mpg)) + 
+  geom_boxplot() + 
+  labs(title = "Boxplot fuel consumption",
+       y = "Miles per Gallon (mpg)")
+```
+
+When we want to plot box plot the data grouped in the different numbers
+of cylinders `cyl` we have to make sure that the variable we use to
+group the data is a factor. We can achieve this by using `as.factor()`.
+
+```{r}
+ggplot(mtcars, aes(x = as.factor(cyl), y = mpg)) +
+  geom_boxplot() +
+  labs(title = "Boxplot fuel consumption",
+       x = "Number of cylinder (cyl)",
+       y = "Miles per Gallon (mpg)")
+```
+
+## Histogram
+
+## Bar chart
+
+## Additional visulisations using gglot2 package
+
+-   [ggplot2 references for further
+    reading](https://r4ds.hadley.nz/data-visualize)
+-   [ggplot2 references
+    manual](https://cloud.r-project.org/web/packages/ggplot2/ggplot2.pdf)
+
+# Getting help
+
+-   [Posit Community, formally known as RStudio
+    community](https://community.rstudio.com/)
+
+-   [Stack Overflow link for
+    ggplot](https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&pageSize=50)
+
+-   [ggplot2 GitHub](https://github.com/tidyverse/ggplot2)
+
+-   [ggplot2 references for further
+    reading](https://r4ds.hadley.nz/data-visualize)

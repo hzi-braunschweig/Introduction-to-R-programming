@@ -1,0 +1,360 @@
+%\documentclass{article}
+\documentclass[a4paper]{article}
+
+\usepackage{hyperref}
+\usepackage{float} 
+\usepackage{adjustbox}
+\usepackage{pdfpages}
+\usepackage{xurl}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=1.5cm}
+
+
+
+
+\title{Introduction to R programming: Data preprocessing}
+\author{Bernard Silenou$^1$ and Henrik Schanze$^1$}
+\date{%
+    $^{1}$Department of Epidemiology, Helmholtz Centre for Infection Research, Braunschweig, Germany\\%
+   % $^2$Organization 2\\[2ex]%
+   \vspace{2em} 
+   Version on \today
+}
+\begin{document}
+
+\maketitle
+\vfill
+\tableofcontents
+\clearpage
+
+<<useful_links, echo=FALSE, eval=TRUE, results='hide'>>=
+# knitr chunk options are found here https://yihui.org/knitr/options/
+@
+
+\noindent Welcome to this R course on preparing data for analysis (data preprocessing). Before proceeding with this course we recommend that you to get familiar with R-Studio (or what ever IDE you are using) and the content covered in the first chapter of the course titled "Basic R".
+
+\section{Loading packages and data into R}
+\subsection*{Goals}
+\begin{itemize}
+\item Install and load packages
+\item Import data into  R
+\end{itemize} 
+
+\subsection{Loading packages}
+Before loading a package to  your current R session, the package needs to already be installed to your computer. Use the command \texttt{install.packages} to install a package and \texttt{library} to load a package. The RStudio IDE provides an option to search and install  packages. 
+
+<<loading_packages, eval=FALSE>>=
+install.packages("MASS")
+library(MASS)
+
+@
+
+\noindent The command \texttt{install.packages} would install the needed package from the default R repository called CRAN. If the package that you wish to install in not on CRAN, you would need to search for the repository hosting the package, download the tar.gz file before installing it.
+
+\subsection{Loading data}
+\noindent We are starting with loading the data we want to work with into R. Data could be stored in different kinds of formats. For the majority of common formats there are simple solutions to import that data.\\
+As an example we want to use a \texttt{.csv} file which stores data about movies including the name, genre, rating and a lot more. We can import the file into R using the function \texttt{read.csv} and give it the name  \texttt{dataMovies}.
+
+% though read.table or other methods
+% through Rstudio wizard
+<<loading_data, eval=TRUE, echo=TRUE>>=
+setwd("~/Introduction-to-R-programming/lecture_notebooks")
+dataMovies <- read.csv("./data/movies.csv") 
+@
+\noindent \texttt{.} in the file path represents the current working directory and  can be printed using \texttt{getwd()} command.
+
+<<Formatting_data, eval=TRUE, echo=F, results='hide'>>=
+dataMovies$drugUse <- sample(c("Yes", "No"), 
+                       size = nrow(dataMovies), replace = T) 
+dataMovies$sexDirector <- sample(c("Male", "male", "M","Female", "f", NA), 
+                       size = nrow(dataMovies), replace = T) 
+dataMovies$yearCurrent <- rep(2023, nrow(dataMovies))
+# adding a second score to the data
+dataMovies$scoreSecond <- dataMovies$score + (dataMovies$score - mean(dataMovies$score, na.rm = T))
+
+@
+
+
+
+\section{Cleaning and transforming data}
+
+\begin{center}
+ \includegraphics[width = 0.2\textwidth]{./image/cleaning_data.png}    
+\end{center} 
+
+\subsection*{Goals}
+After reading this section, you should be able to do th following:
+\begin{itemize}
+\item Deduplicate a data
+\item Manipulate character or numeric variables 
+\item Subset a data
+\item Transform variables in a data
+\item Convert data from wide to long formats and back
+\item Sort a data
+\item Do a single imputation
+\end{itemize} 
+
+% useful links: https://www.questionpro.com/blog/data-wrangling/
+\noindent At this point, your data should be successfully loaded to your R session. Since raw data often has much noise or missing values, it is essential to be processed thoroughly and carefully before fitting a model to it. \vspace{1em}
+
+\noindent This section showcase some of the steps (identifying outliers, error records and missing values, duplicates records, etc.) in transforming raw data into informative data for analysis. \vspace{1em}
+
+\subsection{Detecting duplicate records}
+
+\begin{center}
+\includegraphics[width = 0.2\textwidth]{./image/deduplication.png}    
+\end{center} 
+\noindent Duplicate data is in reference to all or a particular variable, often the ID \vspace{1em}
+
+\noindent \textbf{Example:} Identify and remove rows having the same actors \texttt{name} in \texttt{dataMovies} \vspace{1em} 
+
+<<deduplication, message=FALSE>>=
+# checking if there are duplicates
+dataName <- data.frame(table(dataMovies$name))
+duplicateNames <- dataName[dataName$Freq >1,] 
+dim(duplicateNames)
+View(dataMovies[dataMovies$name == "Anna",])
+
+# Deleting rows with duplicate names at random
+library(dplyr)
+dataMoviesDistinctName <- dplyr::distinct(dataMovies, name, .keep_all = TRUE)
+
+# Deleting rows with duplicate year and score
+dataMoviesDistinctYearScore <- dplyr::distinct(dataMovies, year, score, .keep_all = TRUE)
+
+# Deleting rows with duplicates for all the columns
+dataMoviesDistinctAll <- dplyr::distinct(dataMovies, .keep_all = TRUE)
+nrow(dataMoviesDistinctAll) # The same as dataMovies
+@
+%%---------------------------------
+
+\subsection{Adding and deleting colums in a dataframe}
+
+\begin{center}
+ \includegraphics[width = 0.2\textwidth]{./image/adding_column.png}    
+\end{center} 
+
+\noindent \textbf{Example:} Compute new variables, for for the total score and another for how old a movie is.\vspace{1em} 
+
+<<adding_columns>>=
+dataMovies$age  <- dataMovies$yearCurrent - dataMovies$year
+dataMovies$scoreTotal  <- dataMovies$score + dataMovies$scoreSecond
+head(dataMovies, 3)[, c(1,20:ncol(dataMovies))]
+@
+\noindent Using the the command \texttt{within} reduces typing effort and leads to clean code.
+<<adding_columns_within>>=
+dataMovies <- within(
+data = dataMovies,
+expr = {
+age = yearCurrent - year
+scoreTotal  = score + scoreSecond
+movies21Century = year > 2000
+}
+)
+@
+
+\noindent \textbf{Quick exercise:} 
+\begin{enumerate}
+\item Extract the data call dataMoviesNegativeScore for movies with negative second score (scoreSecond) from dataMovies. Which movie has the smallest score and which has the maximum score.
+\end{enumerate}
+
+%%---------------------------------
+\subsection{Cleaning character variables}
+Data values can be recorded in a way that R does not understand, for example, a question that requires a TRUE or FALSE response may have been recorded as \textit{Y} or \textit{N},  or \textit{Yes} or \textit{No}. \vspace{1em} \\ 
+\noindent \textbf{Example:} \vspace{1em} 
+
+\noindent Replace the character variable \textit{drugUse} with the logical value \textit{TRUE} or \textit{FALSE}.
+<<convert_character_to_logical>>=
+
+characterToLogical <- function(x){
+n = length(x)
+y = rep(NA, n)
+y[x == "Yes"] = TRUE
+y[x == "No"] <- FALSE
+return(y)
+}
+dataMovies$drugUseLogical = (characterToLogical(dataMovies$drugUse))
+@
+
+\noindent Have a look at the sex of the director \texttt{sexDirector} and code males with \texttt{Male} and famales with \texttt{Female}. 
+
+<<Correcting_sex>>=
+table(dataMovies$sexDirector, useNA = "always") # always, to display missing values
+
+replacing_enums <- function(x){
+n = length(x)
+y = rep(NA, n)
+y[x %in% c("f", "Female")] = "Female" # %in% to check for multiple options
+y[x %in% c("M", "male", "Male")] = "Male"
+return(y)
+}
+dataMovies$sexDirectorClean = (replacing_enums(dataMovies$sexDirector))
+@
+
+\noindent \textbf{Quick exercise:} Create a dummy (indicator) variable call drugUseDummy for drugUse. Code Yes with 1 and No with 0. What is the data type of drugUseDummy?
+
+%%---------------------------------
+\subsection{Cleaning numeric variables}
+Data values can be recorded with \textit{errors}. For example, age of 114 yrs for a person. This age value may not be an error but doesn't belong to the population that we are interested in (\textit{outlier}) \vspace{1em}
+
+\noindent We want to identify and either correct the age of the person (if its an error record) or drop the person from the study (outlier). \vspace{1em}
+
+
+\noindent \textbf{Example:}  Assume the required age is between 10 and 40 yrs.  \vspace{1em}
+
+\noindent Are there records having an \texttt{age} that is not between 10 and 40 yrs? If Yes, how many? \vspace{1em}
+
+\noindent Create a new data set having only records with \texttt{age} between 10 and 40 yrs \vspace{1em}
+
+\noindent Replace all records having age below 10 years with 10yrs and those above 40yrs with 40yrs \vspace{1em}
+
+
+<<Correcting_numeric_variable>>=
+table(is.na(dataMovies$age)) # checking for missing data
+summary(dataMovies$age) # Summary of age 
+# Filtering records with age less than 10 or grater than 40
+dataMoviesAgeNot10to40 <- dataMovies[(dataMovies$age < 10 | dataMovies$age > 40), ]
+#Counting number of records
+nrow(dataMoviesAgeNot10to40) # or dim(dataMoviesAgeNot10to40)[1]
+# Alternately, we can negate the condition to filter for age between 10 to 40
+dataMoviesAge10to40 <- dataMovies[!(dataMovies$age < 10 | dataMovies$age > 40), ]
+# OR 
+dataMoviesAge10to40 <- dataMovies[(dataMovies$age >= 10 & dataMovies$age <= 40), ]
+
+# Replacing numeric variables
+# Copying age to a new column called ageImputed 
+# It is not advisable to manipulate existing variables
+dataMovies$ageImputed <- dataMovies$age
+# Replacing ages less than 10 with 10
+dataMovies$ageImputed[dataMovies$ageImputed < 10] <- 10
+# Replacing ages greater than 40 with 40
+dataMovies$ageImputed[dataMovies$ageImputed > 40] <- 40  # do this same task using within function
+@
+
+\noindent \textbf{Homework:} Write a function that compute the median \texttt{score} and assign its value to all records having missing values for \texttt{score}.
+
+%%---------------------------------
+
+\subsection{Sorting}
+
+\begin{center}
+\includegraphics[width = 0.2\textwidth]{./image/sorting.png}    
+\end{center} 
+
+\noindent Sorting involves \textit{arranging} data into some  \textit{meaningful order} to make it easier to understand or analyse. \vspace{1em}
+
+\noindent \textbf{Example:} Sort \texttt{dataMovies} using the following variables: (a) \texttt{year} , (b) \texttt{rating} , (c) \texttt{score} and \texttt{votes}. 
+
+<<sorting_columns>>=
+# Sorting by year (integer)
+dataMoviesSortYear <-  dataMovies[order(dataMovies$year), ]
+# Use the general form "vector[order(vector)]" # to sort a vector
+
+# Sorting by rating (character)
+dataMoviesSortRating <-  dataMovies[order(dataMovies$rating, decreasing = T), ]
+
+# Sorting by score (numeric) and rating (character), Order matters!
+dataMoviesSortScoreRating =  dataMovies[order(dataMovies$score, dataMovies$rating), ]
+# OR using the "with" command
+dataMoviesSortScoreRatingWith = dataMovies[with(dataMovies, order(score, rating)), ]
+@
+  
+\noindent \textbf{Quick exercise:} \vspace{1em}
+
+\noindent (a) Sort \texttt{dataMovies} using variables \texttt{score} and \texttt{writer}.  \vspace{1em}
+
+\noindent (b) Would you have the same results if you sort by: (i) \texttt{writer} and  \texttt{score},  (ii) First by \texttt{score} only and then by \texttt{writer} only?
+
+%%---------------------------------
+\subsection{Converting between wide and long form}
+
+\begin{center}
+\includegraphics[width = 0.7\textwidth]{./image/wide_long_format.png}    
+\end{center} 
+
+\noindent Wide format: a single row for every data point and multiple columns for the varables or predictors. \vspace{1em} \\
+Long format: for each data point there are many rows as the number of variables.    \vspace{1em} 
+
+\noindent The \texttt{melt} function in the \texttt{reshape2} package converts from wide to long. The \texttt{dcast} function does the opposite. \vspace{1em}
+
+\noindent All the variables or predictors should be of the \textit{same data type} \vspace{1em}
+
+\noindent \textbf{Example:} Convert \texttt{dataMovies} data to long format and back to wide format.
+
+
+<<wide_to_long>>=
+library(reshape2)
+# Converting from wide to long format
+dataMoviesScoresGross <- dataMovies[, colnames(dataMovies) %in% 
+                                     c("name", "score", "scoreSecond",  "gross")] 
+dataMoviesScoresGrossLong = melt(data = dataMoviesScoresGross, id.vars = "name")
+
+dataMoviesSortScoreRatingWith = dataMovies[with(dataMovies, order(score, rating)), ]
+
+
+head(dataMoviesScoresGrossLong[with(dataMoviesScoresGrossLong, order(name)),], 10)
+
+# Converting from long to wide format
+#deer_wide_again <- reshape2::dcast(deer_long, SkullID ~ variable)
+dataMoviesScoresGrossWide <- reshape2::dcast(data = dataMoviesScoresGrossLong, 
+                                            value.var="value", mean, formula = name ~ variable)
+@
+
+%\noindent \textbf{Quick exercise:} 
+%%---------------------------------
+
+\subsection{Detecting missing values}
+\begin{center}
+\includegraphics[width = 0.25\textwidth]{./image/missing_values.png}    
+\end{center} 
+
+\noindent Missing data, or missing values, occur when no data value is stored for a variable in an observation. Missing data are coded as \texttt{NA} in R.\vspace{1em} 
+
+\noindent \textbf{Example 1:} \\
+\noindent How many movies have missing data for the directors' sex (\texttt{sexDirectorClean})? \\
+\noindent How many movies have complete data for all the variables (columns)? \vspace{1em} 
+
+<<detecting_na>>=
+# Counting the number of categories, including NA
+table(dataMovies$sexDirectorClean, useNA = "always") 
+
+# Extracting data with complete cases across the entire columns
+has_all_measurements <- complete.cases(dataMovies)
+dataMoviesComplete <- dataMovies[has_all_measurements, ]
+# dataMovies[has_all_measurements, ] is the same as dataMovies[has_all_measurements==TRUE, ]
+# dataMoviesComplete = na.omit(dataMovies) # does the same job
+
+# Extracting data with at least one incomplete case across the entire columns
+dataMoviesIncomplete <- dataMovies[has_all_measurements == FALSE, ]
+@
+
+\noindent How can we address missing values in our analysis? A statistical method called Multiple Imputation (MI) can be used. MI is beyond the scope of this course. However, the  \href{https://cran.r-project.org/web/packages/mice/index.html}{mice}  package is a good references to look at if needed. \vspace{1em} 
+
+\noindent \textbf{Example 2:} How many movies have missing \texttt{score}. Remember that \texttt{score} is a numeric vector. Create a data set called  \texttt{dataMoviesIncompleteScore} having only records with  missing scores.
+<<dealing_with_na>>=
+# Creating a logical vector for score status (missing or available)
+is_score_missing <- is.na(dataMovies$score)
+table(is_score_missing)
+# Alternative solution
+# summary(dataMovies)
+# summary(dataMovies$score)
+
+# Creating data with missing scores
+dataMoviesIncompleteScore <- dataMovies[is_score_missing,]
+dataMoviesCompleteScore <- dataMovies[!is_score_missing,]
+@
+
+\noindent \textbf{Quick exercise:} Create a data excluding missing values for  \texttt{gross} or  \texttt{sexDirector}. Are there records with missing values for  \texttt{budget} and  \texttt{gross}?
+
+<<dealing_with_multiple_na>>=
+condition <- with(data = dataMovies, expr = (is.na(gross) | is.na(sexDirector)) )
+dataMoviesMissingGrosOrSexDirector <- dataMovies[!condition,]
+@
+
+\noindent \textbf{Quick Exercise:} A few cells  in the column rating of  \texttt{dataMovies} are empty. Count the number of empty cells and replace them with  \texttt{NA}, the rightful notation.
+
+%%---------------------------------
+%\subsection{Merging}
+
+\end{document}
