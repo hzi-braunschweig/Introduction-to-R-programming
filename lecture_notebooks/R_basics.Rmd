@@ -15,7 +15,7 @@ Welcome to this introduction course to the programming language **R**. This cour
 
 We will use [**R Markdown**](http://rmarkdown.rstudio.com) **Notebooks** as a mean of teaching for this course. In general these notebooks consists of two different things.\
 On the one hand it consists of text blocks, like the one you are reading right now. They explain motivation, concepts and give background information for the things we are discussing.\
-On the other hand we have code chunks. These are areas where you can write and execute code. You can execute each chunk by clicking the *Run* button on the right side within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. Have a try with the chunk below:
+On the other hand we have code chunks. These are areas where you can write and execute code. You can execute each chunk by clicking the *Run* button on the right side within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter* (for that purpose we recommend to use **RStudio** for working with this notebook). Have a try with the chunk below:
 
 ```{r}
 print("Hello world!")
@@ -24,7 +24,6 @@ print("Hello world!")
 Congratulations you have executed your first line of code (hopefully successful)! Of course this is a rather small code, but the first step is done. Each chunk can include more than just one line of code. If you are interested in executing just one line you can place your cursor in that particular line and press *Ctrl + Enter.*
 
 ```{r}
-
 print("Hello world!")
 print("Hello user!")
 ```
@@ -35,6 +34,49 @@ We will use these code chunks to give executable examples and give the opportuni
 From time to time we will use the code chunks for small, not to complex, exercises.
 
 We hope you are now well prepared to follow and enjoy the upcoming course.
+
+## Getting help
+
+Of course we can not learn everything about **R** via this lecture, since there are books filling the content of **R** and it is still being developed further. As mentioned the best way to learn programming (longterm) is by doing it and that also means learning new things on you own. That also requires options for looking for help if we have questions or are stuck some where.
+
+### R help
+
+Quite often we will face functions in **R** without any idea of what they do or what arguments they need or what values they return or a combination of these questions. A quick way to get some information about a existing function is `help()` or its shortcut `?`.
+
+```{r}
+?pinr
+```
+
+-   **Description** - a brief description what the function does
+-   **Usage** - gives the names of arguments and possible default values
+-   **Arguments** - lists the arguments in more detail
+-   **Details** - gives more information about the function
+-   **Value** - if applicable gives type and details of the object returned by the function
+-   **References** - lists possible references to the function
+-   **See Also** - relates to help pages of similar or related content
+-   **Examples** - gives some helpful examples of using the function. The example code could either be copied and executed manually or executed by `example()`.
+
+```{r}
+example("print")
+for(i in 1:3) print("Hello")
+```
+
+If we are not sure of the name of a function or are looking in a certain direction you can try using `help.search()` or the shortcut `??` to search with a key word.
+
+```{r}
+??median
+```
+
+### Other means of help
+
+-   [*The R Journal*](https://journal.r-project.org/)
+-   [*Cheat sheets*](https://posit.co/resources/cheatsheets/)
+-   [*Google*](https://www.google.com/) - Try googling error messages you get. You are most certainly not the first person with that issue.
+-   [*Stack Overflow*](https://stackoverflow.com/questions) - A good forum, good for browsing or asking stuff.
+-   [*The Epidemiologist R Handbook*](https://www.epirhandbook.com/en/) - A good reference manual with tasks addressing epidemiological issues.
+-   [*Discovering statistics using R*](https://uk.sagepub.com/en-gb/eur/discovering-statistics-using-r/book236067)
+
+As a mean of further learning we could recommend having a look in the package `swirl` an interactive **R** course in the **R** console.
 
 ## First Steps
 
@@ -55,8 +97,8 @@ The most simple usage of a programming language such as **R** is to use it as a 
 Sometime we want to reuse a answer that was already calculated or we want to save this value for some other purpose. We can simply to this by assigning the value via `<-` (short: *Alt+-*):
 
 ```{r}
-a <- 3.14
-a
+p <- 3.14
+p
 ```
 
 Of course we can use the variables itself to do calculations
@@ -109,7 +151,7 @@ We have mentioned some special values in **R** that we are not allowed to overri
 -   `NULL` marks something that is a undefined value.
 -   `NA` is an indicator for a missing value.
 -   `NaN` stands for 'Not a Number' and appears for undefined numerical values such as $\log(-1)$.
--   `Inf/-Inf` stands for 'Infinity' and marks verly large values or results of division by zero and vice versa for `-Inf` .
+-   `Inf/-Inf` stands for 'Infinity' and marks verly large values or results of division by zero and vice versa for `-Inf`.
 
 ### Data types and structures in R
 
@@ -117,7 +159,7 @@ First of all we introduce the basic data types that exist in **R**
 
 -   **logical**: `TRUE`, `FALSE`
 -   **character**: `"a"`, `hzi`
--   **numeric**: `1`, `3.14`
+-   **numeric (double)**: `1`, `3.14`
 -   **integer**: `2L` (the `L` marks an integer in **R**)
 -   **complex**: `2+4i`, `0.5-0.1i` In general we call something of undetermined type an object. We can determine the type of an object by `typeof()`.
 
@@ -137,6 +179,7 @@ str("a")
 str(1)
 str(2L)
 str(2+4i)
+str(a)
 ```
 
 We will later face other types of data, which are derived from these basic types.\
@@ -195,6 +238,7 @@ m <- c(m, "Aramis")
 m
 
 M <- c("D'Artagan", m)
+m
 M
 ```
 
@@ -215,13 +259,31 @@ We can access the elements stored in a vector by the name of the vector followed
 
 ```{r}
 names <- c("jupiter", "peter", "bob")
-names[1]
-names[2:3]
+names[3]
+names[1:length(names)]
+```
+
+Sometimes we are interested in all but some values of a vector. We can indicate the positions we do not want to access via a preceding `-`.
+
+```{r}
+x <-c("a", "b", "c", "d")
+x[-2]
+x[-c(2,4)]
+x[c(1,3)]
+```
+
+Another way to access values in given vector is by using a logical vector of the same length with `TRUE` at the positions we want to access.
+
+```{r}
+v <- c(1,2,3,4,5,6)
+l <- c(FALSE,TRUE,TRUE,FALSE,TRUE,FALSE)
+v[l]
 ```
 
 We can also change certain values this way.
 
 ```{r}
+names
 names[1] <- "justus"
 names
 ```
@@ -230,13 +292,21 @@ When we derive a vector out of data we have imported we might face the the situa
 
 ```{r}
 v <- c(1,2,NA,4,5,NA)
-v
 ```
 
 We can examine if and where a given vector has missing entries by calling the function `is.na()`. Applying this function results in a logical vector of the same length, indicating if an entry is `NA` or not.
 
 ```{r}
 is.na(v)
+```
+
+This enables us to specifically access the values that are `NA` in a vector, e.g. to change their value.
+
+```{r}
+v
+sum(v)
+v[is.na(v)] <- 0
+sum(v)
 ```
 
 If we just want to know if any of the entries is missing we can call `anyNA()`.
@@ -249,7 +319,9 @@ anyNA(c(1,NA,3,4))
 At the beginning we mentioned that a vector only contains objects of one data type, but what happens if we try to implement a vector consisting of different data types.
 
 ```{r}
-c(1,TRUE, 1+1i, "A")
+v <- c(1,TRUE)
+v
+typeof(v)
 ```
 
 #### Data Frames
@@ -263,7 +335,7 @@ data.frame(c("a","b","c","d"), c(1,2,3,4), c(TRUE, FALSE, FALSE, TRUE))
 As we can see the names of the columns are not very understandable or usable. It is therefore almost always a good idea to give the columns sensible names.
 
 ```{r}
-data.frame(id = c("a","b","c","d"), x = c(1,2,3,4), truth = c(TRUE, FALSE, FALSE, TRUE))
+data.frame(id = c("a","b","c","d"), age = c(1,2,3,4), exposure = c(TRUE, FALSE, FALSE, TRUE))
 ```
 
 When creating a data frame we have to keep in mind, that all vectors have to have the same length. If that is not the case one possible solution is to use `NA` to fill up the needed space in a vector.
@@ -283,14 +355,14 @@ Similar to a vector we have a number of functions we could use to examine the st
 
 ```{r}
 dim(iris)
-str(iris)
 names(iris)
+str(iris)
 ```
 
 Sometimes we want to have a look into the data without displaying all of it (especially if the data frame has a lot of rows). In that case we can use `head()` to show the first 6 rows of the data frame and `tail()` to show the last 6 rows of the data frame.
 
 ```{r}
-head(iris)
+tail(iris, n = 4)
 ```
 
 If we want to access some of the data in a given data frame we have different options.
@@ -303,26 +375,336 @@ df
 df[1,2]
 df[1,]
 df[,2]
-df["height"]
 df$height
+df$name
+df[c("name","height")]
+```
+
+As before we could use logical vectors to access the entries of certain rows and columns.
+
+```{r}
+df[c(TRUE,TRUE,FALSE,TRUE,FALSE),c(TRUE,FALSE,TRUE)]
 ```
 
 ## Logic
 
-## Loops
-
-## R Markdown Auto Text
-
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
+We are now looking at an aspect that is part of the majority of programming languages and of course also part of **R**. We have already introduced logical vectors without explaining what the entries `TRUE` and `FALSE` mean and do. Both are the basic logical values in **R** that come up when checking objects or comparing them to each other.
 
 ```{r}
-plot(cars)
+5 > 4
+4 > 5
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+The basic logical operators are:
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+-   `<` greater than
+-   `<=` greater or equal than
+-   `>` smaller than
+-   `>=` smaller or equal than
+-   `==` equal to
+-   `!=` not equal to
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+Most of them do what we would intuitively think they do. The exception to this is the equal operator. We have to remember to use two equal signs instead of one. If you just one equal sign you try to assign a value to an object.
+
+```{r}
+x = 4
+x == 5
+
+5 = x
+5 == x
+```
+
+In many situations we want more complex conditions as the ones presented above. We can combine logical conditions using `&` (and), `|` (or) and `!` (not) for that.
+
+```{r}
+x <- 11
+is.numeric(x) | (x < 10)
+!is.character(x)
+```
+
+### Logic and vectors
+
+In **R** we can easily compare the elements of a vector via a logical operator.
+
+```{r}
+v <- c(-1, -1,0,1,2)
+
+v < 2
+```
+
+The neat thing about these element wise operations in **R** is that the resulting logical vector can be used to get access to the elements of the given vector that satisfied the condition.
+
+```{r}
+x <- seq(-5,5,1)
+x <=0
+x[x != 0]
+x[abs(x) >= 4]
+```
+
+There are some useful operators when checking a condition for vectors of unknown length.
+
+-   `any()` returns `TRUE` if any element fulfills the condition.
+-   `all()` returns `TRUE` if all elements fulfill the condition.
+-   `%in%` returns `TRUE` if any element is in the following vector.
+
+```{r}
+any(v <= 0)
+all(v <= 0)
+v %in% c(-1,1)
+v[v %in% c(-1,1)]
+```
+
+### Dealing with missing values
+
+One thing that has always to be kept in mind is that comparing `NA` with other values results in `NA` which can lead to unintended things.
+
+```{r}
+NA > 0
+x <- c(1, -2, NA, 3)
+
+x[x > 0]
+```
+
+Keeping this in mind allows us to counter these unintended cases.
+
+```{r}
+x[!is.na(x) & (x > 0)]
+```
+
+### If-Else-Statements
+
+The most common use of logical conditions in the majority of programming languages (**R** is to some extend a exception) is to link the execution of parts of code to certain conditions. For example taking the logarithm `log()` of a given number only makes sense if the given number is greater than zero and results in an error otherwise.\
+We implement this with `if` followed by the determining condition in `()` and following that the block of code we want to be executed if the condition is fulfilled in `{}`.
+
+```{r}
+x <- -2
+
+if (x > 0) {log(x)}
+```
+
+In most situations it makes sense to execute some alternative code if the condition fails and be it a message that the conditions are not fulfilled. We can do this by adding `else` after the curly bracket followed by the alternative code in `{}` behind.
+
+```{r}
+x <- 0
+
+if (x > 0) {
+  print(log(x))
+} else {
+  x <- abs(x)
+  log(x)
+}
+```
+
+Using `if` and `else` allows us to distinguish between two cases, either a condition is satisfied or not. Some situations require a more sophisticated distinction of cases. To tackle that issue we could either but a new `if` statement inside the executed code or we could use a more elegant way the `else if` statement. Like `else` it is put behind the `{}` of the preceding statement, but adds a new condition which must be met before executing the following code.
+
+```{r}
+x <- -2
+
+if (is.na(x)) {
+  print("x is NA")
+} else if (x < 0) {
+  print("x is negative")
+} else {
+  print("x is neither positve nor negative")
+}
+```
+
+## Loops
+
+The next thing we want to address is also quite import for the concept of programming in general. To illustrate it we tell a short historical story.\
+One of the greatest mathematicians of all time Carl Friedrich Gauß was born in Braunschweig in 1777. Since his family was not wealthy he visited a common school with a lot of pupils in each class. One day the teacher gave all of them the task to sum up all natural numbers between 1 and 100.\
+Let us imagine being one of the kids (not Gauß) and facing this task with programming. We could start adding these numbers up or we could use a concept called a loop, where we repeat a block of code for a determined amount of times.
+
+### For loop
+
+The first type of loops repeats code for a fixed number of times. We write it with `for` followed by `()`. Between the parentheses we are naming a variable followed by `in` and a vector. The elements of this vector are then assigned to the variable one after the other. The length of the vector therefore determines how often the following code is repeated. After `()` follows the code that should be executed each time in `{}`.
+
+```{r}
+for (i in numeric(length=10)) {
+  print("Hello!")
+}
+```
+
+The neat thing about assigning the variable in between `()` is that we can use that variable in the code block that is repeated.
+
+```{r}
+for (i in c("a","b","c")) {
+  print(i)
+}
+```
+
+Coming back to our motivating task, we could solve this with doing a `for` loop 100 times and adding the number of each step to a total sum.
+
+```{r}
+total <- 0
+for (j in 1:10) {
+   total <- total + j
+}
+total
+```
+
+Since Gauß was a genius he realized that $100 + 1 = 99 + 2 = 98 + 3 = \cdots = 50 + 51 = 101$ and therefore $1+2+\cdots+99+100 = 50\cdot101 = 5050$.
+
+### While loop
+
+In some situations we might not be interested in repeating some code a fixed number of times, but till a certain condition is met. We can implement this by using `while` followed by the condition in `()` and the code as always in `{}`.
+
+```{r}
+total <- 0
+i <- 0
+while (i <= 10) {
+  total <- total + i
+  i <- i + 1
+}
+total
+```
+
+Besides satisfying the checked condition there is another way to end a `while` loop. We can check a (safety) condition within the loop and trigger a `break` if that condition is fulfilled.
+
+```{r}
+i <- 0
+while (TRUE) {
+  i <- i + 1
+  print(i)
+  if (i >= 10) {break}
+}
+```
+
+This is often used when we want to make sure that a `while` loop terminates after a maximum number of steps.
+
+### Alternative
+
+One applications of loops in many programming languages is to manipulate vectors and other similar data structures. Since **R** was developed for 'statistical' programming there are other options doing these kinds of operations. These alternatives are in the majority of cases better suited to do the task we are interested in and therefore perform better then using a loop.
+
+```{r}
+N <- 1e3
+total <- 0
+t_start <- Sys.time()
+
+for (i in 1:N) {
+  total <- total + i
+}
+
+
+total
+print(Sys.time() - t_start)
+
+t_start <- Sys.time()
+
+sum(1:N)
+
+print(Sys.time() - t_start)
+```
+
+Of course the run time of our code might only be interesting for a minority of users, but it is an issue especially when dealing with very large data sets. An other advantage is that these functions have a much lower risk of errors and in most cases shorten your code drastically.
+
+## Functions
+
+### What is a function
+
+Since the beginning of this course we have seen a lot of commands followed by `()`, that done a lot of different things. These commands are called functions and are already written programs that do a lot of different things. To specify what they should do, we have to give them some more information, e.g. some text we want `print` to display. These additions are given to the function inside the `()` and are called arguments.
+
+### Writing own functions
+
+To this point we have seen and used a number of functions. We will see that for some issues it makes sense to define your own function. Similar to variables we have to give a name to our function. The name should be relative short, understandable and not taken by an already implemented function. When call tell **R** that the name we chose is a function with `function()`. The arguments we want to use with the function have to be inside `()` and we could assign default values to them with `=`.
+
+```{r}
+adding <- function(a = 0, b = 0) {
+  print(b)
+  return(a+b)
+}
+```
+
+```{r}
+adding(3)
+```
+
+## *Exercise: Fibonacci sequence*
+
+The Fibonacci numbers are a sequence of numbers that play a surprising role in a lot of natural systems. The sequence is defined by $F_{0} = 0$, $F_{1} = 1$ and $F_{n} = F_{n-2} + F_{n-1}$ for $n\geq2$.
+
+*Task*: Write a function that takes a natural number $n$ and returns the Fibonacci numbers til $F_{n}$. You could further:
+
+-   think about a good way returning the sequence,
+
+-   catch wrong inputs for the function,
+
+-   and give the option to choose different starting points.
+
+```{r}
+
+```
+
+```{r echo=FALSE}
+fib1 <- function(n) {
+  fn_2 <- 0
+  fn_1 <- 1
+  for (i in 2:n) {
+    print(fn_1)
+    fn <- fn_2 + fn_1
+    fn_2 <-  fn_1
+    fn_1 <- fn
+  }
+  return(fn)  
+}
+
+fib1(5)
+
+fib2 <- function(n){
+  fib <- numeric(n+1)
+  fib[1] <- 0
+  fib[2] <- 1
+  
+  for (i in 2:n) {
+    fib[i+1] <- fib[i-1] + fib[i]
+  }
+  
+  return(fib)
+}
+
+fib2(12)
+
+fib3 <- function(n = 2){
+  if (!is.numeric(n) | (n<0)) {
+    return("Please enter a numerical of at least 0.")
+  } else if (n == 0) {
+    return(0)
+  } else if (n == 1) {
+    return(c(0,1))
+  }
+
+  fib <- numeric(n+1)
+  fib[1] <- 0
+  fib[2] <- 1
+  
+  for (i in 2:n) {
+    fib[i+1] <- fib[i-1] + fib[i]
+  }
+  
+  return(fib)
+}
+
+fib3(n=-12)
+
+fib4 <- function(n = 2, fn_2 = 0, fn_1 = 1){
+  if (!is.numeric(n) | (n<0)) {
+    return("Please enter a numerical of at least 0.")
+  } else if (n == 0) {
+    return(0)
+  } else if (n == 1) {
+    return(c(0,1))
+  }
+
+  fib <- numeric(n+1)
+  fib[1] <- fn_2
+  fib[2] <- fn_1
+  
+  for (i in 2:n) {
+    fib[i+1] <- fib[i-1] + fib[i]
+  }
+  
+  return(fib)
+}
+  
+fib4(n = 10, 1, 3)
+```
