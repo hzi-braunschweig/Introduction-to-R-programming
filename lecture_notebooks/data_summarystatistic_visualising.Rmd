@@ -406,6 +406,10 @@ boxplot(mpg ~ vs, data = mtcars, names  = c("V-shaped", "Straight"))
 Again for further and more specific adjustment we could use `ggplot2`
 instead of base **R**.
 
+```{r}
+library(ggplot2)
+```
+
 As with nearly every plot done with `ggplot` we start with making
 `ggplot` familiar with the data we are using and which parts we want to
 visualize. As before we want to use the data set `mtcars` and display
@@ -425,7 +429,10 @@ group the data is a factor. We can achieve this by using `as.factor()`.
 
 ```{r}
 ggplot(mtcars, aes(x = as.factor(cyl), y = mpg)) +
-  geom_boxplot()
+  geom_boxplot() +
+  labs(title = "Boxplot fuel consumption",
+       x = "Number of cylinder (cyl)",
+       y = "Miles per Gallon (mpg)")
 ```
 
 ## Histogram
