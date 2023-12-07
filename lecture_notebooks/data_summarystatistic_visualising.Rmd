@@ -528,6 +528,75 @@ ggplot(airquality[airquality$Month %in% c(5,8),],
 
 ## Bar chart
 
+A bar chart displays the amount of of a discrete categorical data via
+the height or length of a bar. Using a bar chart is therefore a visual
+alternative for using a table.
+
+As an example we will use the data set `mtcars` which includes
+information about 32 different cars, e.g. the number of cylinders `cyl`,
+the number of forward gears `gear`, the kind of transmission am (0 =
+automatic, 1 = manual) and the engine design `vs` (0 = V-shaped, 1 =
+straight).
+
+```{r}
+mtcars
+```
+
+```{r}
+table(mtcars$cyl)
+table(mtcars$gear)
+table(mtcars$am)
+table(mtcars$vs)
+```
+
+### Using base R
+
+As we can see the data set `mtcars` lists different cars in their rows
+including information about the number of cylinders `cyl`. To create a
+bar chart depicting the number of cars with a certain amount of
+cylinders, we can not use this data set directly, since this information
+is not directly part of the data set.
+
+To create such a bar chart we first have to extract the required
+information out of the data set. Luckily `table()` does exactly what we
+want. If we use it and turn the result via `data.frame()` into a data
+frame (so we have access to the row listing the counts), we can use
+`barplot()` to create the respective bar chart.
+
+```{r}
+cyl_table <- data.frame(table(mtcars$cyl))
+cyl_table
+barplot(height = cyl_table$Freq, names = cyl_table$Var1,
+        main = "Amount of cars with respective number of cylinders",
+        xlab = "Number of cylinders")
+```
+
+### Using ggplot2 package
+
+If not already done, please load the `ggplot2` package.
+
+```{r}
+library(ggplot2)
+```
+
+Using `ggplot2` has the advantage that we can feed our data directly to
+the 'plotting'-function without count the values of which amount we are
+interested in 'manually'. We can give our data set to `ggplot()`, and
+specify in `aes()` that we are interested to plot `cyl` a long the
+x-axis. Since the numbers in `cyl` represent categories and not
+(directly) numbers, we have to use `as.factor()`. After this initial
+step, we could create the bar chart with adding `geom_bar()`,where we
+can specify details about the bar chart, and `labs()` to set all kinds
+of labels for our graphic.
+
+```{r}
+ggplot(mtcars, aes(x = as.factor(cyl))) +
+  geom_bar() +
+  labs(title = "Amount of cars with respective number of cylinders",
+       x = "Number of cylinders",
+       y = "Number of cars")
+```
+
 ## Additional visulisations using gglot2 package
 
 -   [ggplot2 references for further
