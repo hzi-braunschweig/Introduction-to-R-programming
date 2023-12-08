@@ -11,7 +11,9 @@ editor_options:
     wrap: 72
 ---
 
--   After imparting and cleaning your data, the next aim before
+# Data Visualization
+
+-   After importing and cleaning your data, the next aim before
     modelling is to understand your data.
 -   Essential tools to attain this aim are *summary statistics* and
     *plots*.
@@ -23,81 +25,115 @@ editor_options:
 
 # Summary statistics
 
--   Summary statistics are used to summarize a data in order to
-    communicate the largest amount of information as simply as possible.
+Summary statistics are used to summarize data by precise numeric values
+to develop an understanding of the data and communicate its key
+information as simply as possible. The basic measurements often used for
+this are
 
--   Measures often used are arithmetic mean, variance or standard
-    deviation, and correlation coefficient.
+-   the arithmetic mean, to get an idea of the center of the data
+    points,
 
--   The *obama_vs_mccain* dataset contains the fractions of people
-    voting for Obama and McCain in the 2008 US presidential elections.
+-   the mean, to examine the data points in the middle,
 
--   We load this data from the R package *learningr* and use it in
-    subsequent examples:
+-   the variance/standard deviation, to measure the range of data,
+
+-   and the correlation coefficient, to examine the correlation of two
+    variables in the data set.
+
+To demonstrate these and other things we will use the `obama_vs_mccain`
+data set, that is part of the `learningr` and contains the fractions of
+people voting for Obama and McCain in the 2008 US presidential
+elections. We want to get an idea of the votes for Obama.
 
 ```{r}
-#data(package = "learningr") # to print the names of dataset in the package learningr
-#data(obama_vs_mccain, package = "learningr")
 load(file ="data/obama_vs_mccain.rda")
 votesObama = obama_vs_mccain$Obama
 ```
 
-Let {x} be the votes for Obama.
-
 ### Measure of location:
 
-`mean(x)`: sum of x divided by the length
+As a first measurement we calculate the arithmetic mean, which is the
+sum of all data points divided by the number of data points, of the
+votes by `mean()`.
 
 ```{r}
 mean(votesObama)
 ```
 
-`median(x)`: 50% of x is above and 50% is below
+As a second measure we calculate the median, i.e. the data point located
+in the middle of all data points, by `mean()`.
 
 ```{r}
 median(votesObama)
 ```
 
-### Measure of rank:
+### Measure of range:
 
-`min(x)`: minimum value of x
+To get the smallest fraction of votes for Obama we could use `min()`.
 
 ```{r}
 min(votesObama)
 ```
 
-`max(x)`: maximum value of x
+Similar to that we can get the highest amount of votes by `max()`.
 
 ```{r}
 max(votesObama)
 ```
 
-`quantile(x, 0.25)`: 25% of x is below this value; `quantile(x, 0.50)`==
-median(x)
+To get the data points that separates the set in different sections,
+e.g. the first quartile being located above $25\%$ and below $75\%$ of
+the other data points, we can use `quantile()` and use its second
+argument to determine the fraction of data points below the value.
 
 ```{r}
-quantile(votesObama, 0.50)
-median(votesObama)
+quantile(votesObama, 0.25)
 quantile(votesObama)
+```
+
+**Quick exercise**: Express `min()`, `max()` and `median()` via
+`quantile()`.
+
+```{r}
+min(votesObama)
+quantile(votesObama, )
+
+max(votesObama)
+quantile(votesObama, )
+
+median(votesObama)
+quantile(votesObama, )
 ```
 
 ### Measure of variation:
 
-`sd(x)`: standard deviation, square sd to get variance or use `var(x)`
-
-```{r}
-sd(votesObama)
-var(votesObama) 
-sd(votesObama)**2
-```
-
-`range(x)`: gives min and max values
+To get the range of our data, which is simply the smallest and largest
+values of the data, we can use `range()`.
 
 ```{r}
 range(votesObama)
 ```
 
-`IQR(x)`: interquartile range == 75th percentile minus 25th percentile
+For the standard deviation of your data, i.e. the average distance of
+data points to its mean, we can use `sd()`.
+
+`sd(x)`: standard deviation, square sd to get variance or use `var(x)`
+
+```{r}
+sd(votesObama)
+```
+
+Sometimes the variance, determined by `var()` is used instead of the
+standard variation, which is just the square root of the variance.
+
+```{r}
+var(votesObama) 
+sd(votesObama)**2
+```
+
+The interquartile range is the distance between the $25\%$ and $75\%$
+percentile, and incorporates $50\%$ of the data including the median.
+The calculated by one command, we can use `IQR()`.
 
 ```{r}
 IQR(votesObama)
@@ -105,31 +141,38 @@ IQR(votesObama)
 
 ### Measure of position or count:
 
-`x[1]`: first element in x
+Sometimes we are interested in the data at certain positions. To access
+the first value in the data we could use `[1]` following the data set.
 
 ```{r}
 votesObama[1]
 ```
 
-`x[length(x)]`: last element in x
+Since `length()` gives us the length of the data vector, we can use it
+to access the last element.
 
 ```{r}
 votesObama[length(votesObama)]
 ```
 
 **Quick exercise**: what is the last last but one element in
-`votsObama`?
+`votesObama`?
+
+```{r}
+
+```
 
 ### Other summary statistics functions:
 
-`summary(x)`: generic function to compute multiple statistics at once
+To get an statistical overview over the data, we can use `summary()`.
 
 ```{r}
 summary(votesObama)
 summary(obama_vs_mccain)
 ```
 
-`length(x)`: the number of element in x
+An alternative to `length()`, that is also useful, when operating with
+data frames is `dim()`.
 
 ```{r}
 length(votesObama)
@@ -138,33 +181,40 @@ dim(obama_vs_mccain)[1] # the same as nrow(obama_vs_mccain)
 dim(obama_vs_mccain)[2] # the same as ncol(obama_vs_mccain)
 ```
 
-`table(is.na(x))`: count the number of missing and non missing values
+If we have categorical data and want an overview about the distribution
+among the categories we can use `table()`. For example we could examine
+the amount of missing data by using `table()` after applying `is.na()`.
 
 ```{r}
 table(is.na(votesObama))
+table(is.na(votesObama), useNA = "always")
 ```
 
-`length(unique(x))`: count the number of unique value
+Get get a list of all answers given we could call `unique()` on the data
+set. The length of its return also tells us how many different answers
+there are.
 
 ```{r}
+unique(obama_vs_mccain$Region)
 length(unique(obama_vs_mccain$Region))
 ```
 
-`cor(x)`: calculates correlations between numeric vectors, "pearson"
-(default)
+To calculate the correlation coefficient (pearson by default) of two
+numeric vectors, we can use `cor()`, to get a hint if there might be a
+link between both variables.
 
 ```{r}
 cor(obama_vs_mccain$Obama, obama_vs_mccain$McCain)
 ```
 
-`cov(x)`: calculates covariance between numeric vectors, "pearson"
-(default)
+Same wise we could calculate the covariance (also pearson by default) by
+`cov()`.
 
 ```{r}
 with(obama_vs_mccain, cov(Obama, McCain)) # the same as cov(obama_vs_mccain$Obama, obama_vs_mccain$McCain)
 ```
 
-# Visulisations
+# Visualizations
 
 ## Systems of plots
 
