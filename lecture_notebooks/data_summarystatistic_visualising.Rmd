@@ -183,6 +183,80 @@ saved as objects, edited and later plotted.
 The three systems are, sadly, mostly incompatible, thus recommended to
 choose one system for a project. ggplot2 is a good choice.
 
+## Heat maps
+
+When we want to visualize the connection of two categorical variables
+our set of tools is quite limited. As an example we have a look at the
+data set `mtcars` incorporating data about 32 cars. We want to visualize
+the (possible) link between the number of cylinders `cyl` and number of
+(forward) gears `gear`.
+
+One of the most simple solutions is to use a cross table. To create one,
+we can use `table()` and hand over the column names we are interested in
+(you can hand in more than two, but the cases that this is useful are
+quite limited).
+
+```{r}
+table(mtcars$cyl, mtcars$gear)
+```
+
+Depending on the number of categories and magnitude of numbers, spotting
+an underlying correlation might be quite hard. A way to spot connections
+faster is to color-code the cells of the cross table, that is what a
+heat map does.
+
+### Using base R
+
+To transform across table into heat map we can give the cross table to
+`heatmap()`.
+
+```{r}
+heatmap(table(mtcars$cyl, mtcars$gear))
+```
+
+Without any further arguments `heatmap()` also creates a dendrogram an
+reorders the categories according to the clustering. To deactivate that
+we have to set the arguments `Rowv` and `Colv` to `NA` and by setting
+`revC=TRUE` we get the same cell order than in the cross table.
+
+```{r}
+heatmap(table(mtcars$cyl, mtcars$gear), Rowv = NA, Colv = NA, revC = TRUE,
+        main = "Number of cylinders vs. number of gears",
+        xlab = "Number of gears",
+        ylab = "Number of cylinders")
+```
+
+### Using ggplot2 package
+
+First of all we have to load the `ggplot2` package.
+
+```{r}
+library(ggplot2)
+```
+
+Creating a heat map with `ggplot2` requires a little bit extra work, but
+it enables us to adjust the graphic in more detail. We also start with
+the initial cross table, but turn it into a data frame
+
+```{r}
+df_cars <- data.frame(table(mtcars$cyl, mtcars$gear))
+
+df_cars
+```
+
+Now we can hand over that data frame to `ggplot()` and specify in
+`aes()` which variable (from the data frame) should be on the `x` axis,
+on the `y` axis and which numbers should the cells be filled with
+(`fill`). Finally we can add title and labels as before.
+
+```{r}
+ggplot(df_cars, aes(x = Var2, y = Var1, fill = Freq)) +
+  geom_tile() +
+  labs(main = "Number of cylinders vs. number of gears",
+       x = "Number of gears",
+       y = "Number of cylinders")
+```
+
 ## Scatter plot
 
 It is used to explore the relationship between two continuous variables
