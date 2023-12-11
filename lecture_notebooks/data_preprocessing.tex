@@ -120,7 +120,20 @@ As an example we want to use a \texttt{.csv} file which stores data about movies
 \end{knitrout}
 \noindent \texttt{.} in the file path represents the current working directory and  can be printed using \texttt{getwd()} command.
 
-
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#results='hide'}
+\hlstd{dataMovies}\hlopt{$}\hlstd{drugUse} \hlkwb{<-} \hlkwd{sample}\hlstd{(}\hlkwd{c}\hlstd{(}\hlstr{"Yes"}\hlstd{,} \hlstr{"No"}\hlstd{),}
+                       \hlkwc{size} \hlstd{=} \hlkwd{nrow}\hlstd{(dataMovies),} \hlkwc{replace} \hlstd{= T)}
+\hlstd{dataMovies}\hlopt{$}\hlstd{sexDirector} \hlkwb{<-} \hlkwd{sample}\hlstd{(}\hlkwd{c}\hlstd{(}\hlstr{"Male"}\hlstd{,} \hlstr{"male"}\hlstd{,} \hlstr{"M"}\hlstd{,}\hlstr{"Female"}\hlstd{,} \hlstr{"f"}\hlstd{,} \hlnum{NA}\hlstd{),}
+                       \hlkwc{size} \hlstd{=} \hlkwd{nrow}\hlstd{(dataMovies),} \hlkwc{replace} \hlstd{= T)}
+\hlstd{dataMovies}\hlopt{$}\hlstd{yearCurrent} \hlkwb{<-} \hlkwd{rep}\hlstd{(}\hlnum{2023}\hlstd{,} \hlkwd{nrow}\hlstd{(dataMovies))}
+\hlcom{# adding a second score to the data}
+\hlstd{dataMovies}\hlopt{$}\hlstd{scoreSecond} \hlkwb{<-} \hlstd{dataMovies}\hlopt{$}\hlstd{score} \hlopt{+} \hlstd{(dataMovies}\hlopt{$}\hlstd{score} \hlopt{-} \hlkwd{mean}\hlstd{(dataMovies}\hlopt{$}\hlstd{score,} \hlkwc{na.rm} \hlstd{= T))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 
 
@@ -161,14 +174,14 @@ After reading this section, you should be able to do th following:
 \begin{alltt}
 \hlcom{# checking if there are duplicates}
 \hlstd{dataName} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwd{table}\hlstd{(dataMovies}\hlopt{$}\hlstd{name))}
-\hlstd{duplicateNames} \hlkwb{<-} \hlstd{dataName[dataName}\hlopt{$}\hlstd{Freq} \hlopt{>}\hlnum{1}\hlstd{,]}
+\hlstd{duplicateNames} \hlkwb{<-} \hlstd{dataName[dataName}\hlopt{$}\hlstd{Freq} \hlopt{>}\hlnum{1}\hlstd{, ]}
 \hlkwd{dim}\hlstd{(duplicateNames)}
 \end{alltt}
 \begin{verbatim}
 ## [1] 149   2
 \end{verbatim}
 \begin{alltt}
-\hlkwd{View}\hlstd{(dataMovies[dataMovies}\hlopt{$}\hlstd{name} \hlopt{==} \hlstr{"Anna"}\hlstd{,])}
+\hlkwd{View}\hlstd{(dataMovies[dataMovies}\hlopt{$}\hlstd{name} \hlopt{==} \hlstr{"Anna"}\hlstd{, ])}
 
 \hlcom{# Deleting rows with duplicate names at random}
 \hlkwd{library}\hlstd{(dplyr)}
@@ -263,7 +276,7 @@ Data values can be recorded in a way that R does not understand, for example, a 
 \begin{verbatim}
 ## 
 ##      f Female      M   male   Male   <NA> 
-##   1221   1324   1311   1229   1277   1306
+##   1260   1258   1312   1274   1270   1294
 \end{verbatim}
 \begin{alltt}
 \hlstd{replacing_enums} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)\{}
@@ -454,7 +467,7 @@ Long format: for each data point there are many rows as the number of variables.
 \begin{verbatim}
 ## 
 ## Female   Male   <NA> 
-##   2545   3817   1306
+##   2518   3856   1294
 \end{verbatim}
 \begin{alltt}
 \hlcom{# Extracting data with complete cases across the entire columns}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2023.5.31)  4 DEC 2023 18:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2023.5.31)  5 DEC 2023 15:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -442,85 +442,92 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 89.
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
 (Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 99.
+
+Overfull \hbox (50.27498pt too wide) in paragraph at lines 133--133
+[][]\OT1/cmtt/m/n/10 dataMovies[][]$[][]scoreSecond[] []<-[] []dataMovies[][]$[
+][]score[] []+[] [](dataMovies[][]$[][]score[] []-[] []mean[][](dataMovies[][]$
+[][]score,[] []na.rm[] []= T))[][] 
+ []
+
 <./image/cleaning_data.png, id=71, 497.86pt x 358.33875pt>
 File: ./image/cleaning_data.png Graphic file (type png)
 <use ./image/cleaning_data.png>
-Package pdftex.def Info: ./image/cleaning_data.png  used on input line 130.
+Package pdftex.def Info: ./image/cleaning_data.png  used on input line 143.
 (pdftex.def)             Requested size: 93.89265pt x 67.57655pt.
- [2
+[2
 
  <./image/cleaning_data.png>]
 <./image/deduplication.png, id=82, 273.02pt x 184.69pt>
 File: ./image/deduplication.png Graphic file (type png)
 <use ./image/deduplication.png>
-Package pdftex.def Info: ./image/deduplication.png  used on input line 153.
+Package pdftex.def Info: ./image/deduplication.png  used on input line 166.
 (pdftex.def)             Requested size: 93.89265pt x 63.5152pt.
 <./image/adding_column.png, id=83, 264.99pt x 156.585pt>
 File: ./image/adding_column.png Graphic file (type png)
 <use ./image/adding_column.png>
-Package pdftex.def Info: ./image/adding_column.png  used on input line 194.
+Package pdftex.def Info: ./image/adding_column.png  used on input line 207.
 (pdftex.def)             Requested size: 93.89265pt x 55.48174pt.
- [3 <./image/deduplication.png> <./image/adding_column.png>]
-LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 220
+ [3 <./image/deduplication.png>]
+LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 233
 .
 
 (/usr/share/R/share/texmf/tex/latex/omscmtt.fd
 File: omscmtt.fd 
 )
 LaTeX Font Info:    Font shape `OMS/cmtt/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 220.
- [4]
-Overfull \hbox (46.76114pt too wide) in paragraph at lines 338--338
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 233.
+ [4 <./image/adding_column.png>]
+Overfull \hbox (46.76114pt too wide) in paragraph at lines 351--351
 [][]\OT1/cmtt/m/n/10 dataMovies[][]$[][]ageImputed[dataMovies[][]$[][]ageImpute
 d[] []>[] []40[][]][] []<-[] []40[]  []\OT1/cmtt/m/it/10 # do this same task us
 ing within function[][] 
  []
 
-<./image/sorting.png, id=97, 327.2225pt x 215.80624pt>
+[5]
+<./image/sorting.png, id=101, 327.2225pt x 215.80624pt>
 File: ./image/sorting.png Graphic file (type png)
 <use ./image/sorting.png>
-Package pdftex.def Info: ./image/sorting.png  used on input line 350.
+Package pdftex.def Info: ./image/sorting.png  used on input line 363.
 (pdftex.def)             Requested size: 93.89265pt x 61.92361pt.
-[5]
 <./image/wide_long_format.png, id=102, 1235.61626pt x 702.625pt>
 File: ./image/wide_long_format.png Graphic file (type png)
 <use ./image/wide_long_format.png>
-Package pdftex.def Info: ./image/wide_long_format.png  used on input line 385.
+Package pdftex.def Info: ./image/wide_long_format.png  used on input line 398.
 (pdftex.def)             Requested size: 328.6279pt x 186.87016pt.
- [6 <./image/sorting.png> <./image/wide_long_format.png>]
+ [6 <./image/sorting.png>]
 Missing character: There is no Â in font cmtt10!
 Missing character: There is no ² in font cmtt10!
 
-Overfull \hbox (29.27516pt too wide) in paragraph at lines 429--429
+Overfull \hbox (29.27516pt too wide) in paragraph at lines 442--442
 []                                            []\OT1/cmtt/m/n/10 value.var[][]=
 [][]"value"[][], mean,[] []formula[] []= name[] []~[] []variable)[][] 
  []
 
-<./image/missing_values.png, id=109, 683.55376pt x 468.75125pt>
+<./image/missing_values.png, id=108, 683.55376pt x 468.75125pt>
 File: ./image/missing_values.png Graphic file (type png)
 <use ./image/missing_values.png>
-Package pdftex.def Info: ./image/missing_values.png  used on input line 439.
+Package pdftex.def Info: ./image/missing_values.png  used on input line 452.
 (pdftex.def)             Requested size: 117.36761pt x 80.48059pt.
-
-Overfull \hbox (15.26141pt too wide) in paragraph at lines 463--463
+[7 <./image/wide_long_format.png>]
+Overfull \hbox (15.26141pt too wide) in paragraph at lines 476--476
 [][]\OT1/cmtt/m/it/10 # dataMovies[has_all_measurements, ] is the same as dataM
 ovies[has_all_measurements==TRUE, ][][] 
  []
 
-[7 <./image/missing_values.png>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 515.
- [8]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 515.
+[8 <./image/missing_values.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 528.
+ [9]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 528.
  (./data_preprocessing.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 515.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 515.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 528.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 528.
 Package rerunfilecheck Info: File `data_preprocessing.out' has not changed.
 (rerunfilecheck)             Checksum: 37F845490B6E74A89AD0FE616CF7366D;793.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 515.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 528.
  ) 
 Here is how much of TeX's memory you used:
- 7611 strings out of 492982
- 113563 string characters out of 6134896
+ 7612 strings out of 492982
+ 113569 string characters out of 6134896
  216091 words of memory out of 5000000
  11035 multiletter control sequences out of 15000+600000
  8577 words of font info for 31 fonts, out of 8000000 for 9000
@@ -536,10 +543,10 @@ t/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts
 ublic/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
 ts/cm/cmtt10.pfb>
-Output written on data_preprocessing.pdf (8 pages, 968870 bytes).
+Output written on data_preprocessing.pdf (9 pages, 970294 bytes).
 PDF statistics:
- 162 PDF objects out of 1000 (max. 8388607)
- 128 compressed objects within 2 object streams
- 24 named destinations out of 1000 (max. 500000)
+ 167 PDF objects out of 1000 (max. 8388607)
+ 132 compressed objects within 2 object streams
+ 25 named destinations out of 1000 (max. 500000)
  119 words of extra memory for PDF output out of 10000 (max. 10000000)
 
