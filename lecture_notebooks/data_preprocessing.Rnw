@@ -64,7 +64,8 @@ dataMovies <- read.csv("./data/movies.csv")
 @
 \noindent \texttt{.} in the file path represents the current working directory and  can be printed using \texttt{getwd()} command.
 
-<<Formatting_data, eval=TRUE, echo=F, results='hide'>>=
+<<Formatting_data, eval=TRUE, echo=T>>=
+#results='hide'
 dataMovies$drugUse <- sample(c("Yes", "No"), 
                        size = nrow(dataMovies), replace = T) 
 dataMovies$sexDirector <- sample(c("Male", "male", "M","Female", "f", NA), 
@@ -112,9 +113,9 @@ After reading this section, you should be able to do th following:
 <<deduplication, message=FALSE>>=
 # checking if there are duplicates
 dataName <- data.frame(table(dataMovies$name))
-duplicateNames <- dataName[dataName$Freq >1,] 
+duplicateNames <- dataName[dataName$Freq >1, ] 
 dim(duplicateNames)
-View(dataMovies[dataMovies$name == "Anna",])
+View(dataMovies[dataMovies$name == "Anna", ])
 
 # Deleting rows with duplicate names at random
 library(dplyr)
