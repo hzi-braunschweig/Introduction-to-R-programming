@@ -11,7 +11,9 @@ editor_options:
     wrap: 72
 ---
 
--   After imparting and cleaning your data, the next aim before
+# Data Visualization
+
+-   After importing and cleaning your data, the next aim before
     modelling is to understand your data.
 -   Essential tools to attain this aim are *summary statistics* and
     *plots*.
@@ -23,81 +25,115 @@ editor_options:
 
 # Summary statistics
 
--   Summary statistics are used to summarize a data in order to
-    communicate the largest amount of information as simply as possible.
+Summary statistics are used to summarize data by precise numeric values
+to develop an understanding of the data and communicate its key
+information as simply as possible. The basic measurements often used for
+this are
 
--   Measures often used are arithmetic mean, variance or standard
-    deviation, and correlation coefficient.
+-   the arithmetic mean, to get an idea of the center of the data
+    points,
 
--   The *obama_vs_mccain* dataset contains the fractions of people
-    voting for Obama and McCain in the 2008 US presidential elections.
+-   the mean, to examine the data points in the middle,
 
--   We load this data from the R package *learningr* and use it in
-    subsequent examples:
+-   the variance/standard deviation, to measure the range of data,
+
+-   and the correlation coefficient, to examine the correlation of two
+    variables in the data set.
+
+To demonstrate these and other things we will use the `obama_vs_mccain`
+data set, that is part of the `learningr` and contains the fractions of
+people voting for Obama and McCain in the 2008 US presidential
+elections. We want to get an idea of the votes for Obama.
 
 ```{r}
-#data(package = "learningr") # to print the names of dataset in the package learningr
-#data(obama_vs_mccain, package = "learningr")
 load(file ="data/obama_vs_mccain.rda")
 votesObama = obama_vs_mccain$Obama
 ```
 
-Let {x} be the votes for Obama.
-
 ### Measure of location:
 
-`mean(x)`: sum of x divided by the length
+As a first measurement we calculate the arithmetic mean, which is the
+sum of all data points divided by the number of data points, of the
+votes by `mean()`.
 
 ```{r}
 mean(votesObama)
 ```
 
-`median(x)`: 50% of x is above and 50% is below
+As a second measure we calculate the median, i.e. the data point located
+in the middle of all data points, by `mean()`.
 
 ```{r}
 median(votesObama)
 ```
 
-### Measure of rank:
+### Measure of range:
 
-`min(x)`: minimum value of x
+To get the smallest fraction of votes for Obama we could use `min()`.
 
 ```{r}
 min(votesObama)
 ```
 
-`max(x)`: maximum value of x
+Similar to that we can get the highest amount of votes by `max()`.
 
 ```{r}
 max(votesObama)
 ```
 
-`quantile(x, 0.25)`: 25% of x is below this value; `quantile(x, 0.50)`==
-median(x)
+To get the data points that separates the set in different sections,
+e.g. the first quartile being located above $25\%$ and below $75\%$ of
+the other data points, we can use `quantile()` and use its second
+argument to determine the fraction of data points below the value.
 
 ```{r}
-quantile(votesObama, 0.50)
-median(votesObama)
+quantile(votesObama, 0.25)
 quantile(votesObama)
+```
+
+**Quick exercise**: Express `min()`, `max()` and `median()` via
+`quantile()`.
+
+```{r}
+min(votesObama)
+quantile(votesObama, )
+
+max(votesObama)
+quantile(votesObama, )
+
+median(votesObama)
+quantile(votesObama, )
 ```
 
 ### Measure of variation:
 
-`sd(x)`: standard deviation, square sd to get variance or use `var(x)`
-
-```{r}
-sd(votesObama)
-var(votesObama) 
-sd(votesObama)**2
-```
-
-`range(x)`: gives min and max values
+To get the range of our data, which is simply the smallest and largest
+values of the data, we can use `range()`.
 
 ```{r}
 range(votesObama)
 ```
 
-`IQR(x)`: interquartile range == 75th percentile minus 25th percentile
+For the standard deviation of your data, i.e. the average distance of
+data points to its mean, we can use `sd()`.
+
+`sd(x)`: standard deviation, square sd to get variance or use `var(x)`
+
+```{r}
+sd(votesObama)
+```
+
+Sometimes the variance, determined by `var()` is used instead of the
+standard variation, which is just the square root of the variance.
+
+```{r}
+var(votesObama) 
+sd(votesObama)**2
+```
+
+The interquartile range is the distance between the $25\%$ and $75\%$
+percentile, and incorporates $50\%$ of the data including the median.
+The calculated by one command, we can use `IQR()`.
 
 ```{r}
 IQR(votesObama)
@@ -105,31 +141,38 @@ IQR(votesObama)
 
 ### Measure of position or count:
 
-`x[1]`: first element in x
+Sometimes we are interested in the data at certain positions. To access
+the first value in the data we could use `[1]` following the data set.
 
 ```{r}
 votesObama[1]
 ```
 
-`x[length(x)]`: last element in x
+Since `length()` gives us the length of the data vector, we can use it
+to access the last element.
 
 ```{r}
 votesObama[length(votesObama)]
 ```
 
 **Quick exercise**: what is the last last but one element in
-`votsObama`?
+`votesObama`?
+
+```{r}
+
+```
 
 ### Other summary statistics functions:
 
-`summary(x)`: generic function to compute multiple statistics at once
+To get an statistical overview over the data, we can use `summary()`.
 
 ```{r}
 summary(votesObama)
 summary(obama_vs_mccain)
 ```
 
-`length(x)`: the number of element in x
+An alternative to `length()`, that is also useful, when operating with
+data frames is `dim()`.
 
 ```{r}
 length(votesObama)
@@ -138,33 +181,40 @@ dim(obama_vs_mccain)[1] # the same as nrow(obama_vs_mccain)
 dim(obama_vs_mccain)[2] # the same as ncol(obama_vs_mccain)
 ```
 
-`table(is.na(x))`: count the number of missing and non missing values
+If we have categorical data and want an overview about the distribution
+among the categories we can use `table()`. For example we could examine
+the amount of missing data by using `table()` after applying `is.na()`.
 
 ```{r}
 table(is.na(votesObama))
+table(is.na(votesObama), useNA = "always")
 ```
 
-`length(unique(x))`: count the number of unique value
+Get get a list of all answers given we could call `unique()` on the data
+set. The length of its return also tells us how many different answers
+there are.
 
 ```{r}
+unique(obama_vs_mccain$Region)
 length(unique(obama_vs_mccain$Region))
 ```
 
-`cor(x)`: calculates correlations between numeric vectors, "pearson"
-(default)
+To calculate the correlation coefficient (pearson by default) of two
+numeric vectors, we can use `cor()`, to get a hint if there might be a
+link between both variables.
 
 ```{r}
 cor(obama_vs_mccain$Obama, obama_vs_mccain$McCain)
 ```
 
-`cov(x)`: calculates covariance between numeric vectors, "pearson"
-(default)
+Same wise we could calculate the covariance (also pearson by default) by
+`cov()`.
 
 ```{r}
 with(obama_vs_mccain, cov(Obama, McCain)) # the same as cov(obama_vs_mccain$Obama, obama_vs_mccain$McCain)
 ```
 
-# Visulisations
+# Visualizations
 
 ## Systems of plots
 
@@ -191,31 +241,39 @@ data set `mtcars` incorporating data about 32 cars. We want to visualize
 the (possible) link between the number of cylinders `cyl` and number of
 (forward) gears `gear`.
 
+Since this data set is part of base **R**, we can use the R help to get
+a better understanding what the columns mean.
+
+```{r}
+?mtcars
+```
+
 One of the most simple solutions is to use a cross table. To create one,
 we can use `table()` and hand over the column names we are interested in
 (you can hand in more than two, but the cases that this is useful are
-quite limited).
+quite limited). We could also hand over names for the row and column
+names via `dnn`.
 
 ```{r}
-table(mtcars$cyl, mtcars$gear)
+table(mtcars$cyl, mtcars$gear, dnn = list("cylinder","gears"))
 ```
 
 Depending on the number of categories and magnitude of numbers, spotting
 an underlying correlation might be quite hard. A way to spot connections
-faster is to color-code the cells of the cross table, that is what a
-heat map does.
+faster is to color-code the cells of the cross table The resulting
+graphic is called a heat map.
 
 ### Using base R
 
-To transform across table into heat map we can give the cross table to
+To transform a cross table into heat map we can give the cross table to
 `heatmap()`.
 
 ```{r}
 heatmap(table(mtcars$cyl, mtcars$gear))
 ```
 
-Without any further arguments `heatmap()` also creates a dendrogram an
-reorders the categories according to the clustering. To deactivate that
+Without any further arguments `heatmap()` also creates a dendrogram and
+reorders the categories according to its clustering. To deactivate that
 we have to set the arguments `Rowv` and `Colv` to `NA` and by setting
 `revC=TRUE` we get the same cell order than in the cross table.
 
@@ -226,9 +284,22 @@ heatmap(table(mtcars$cyl, mtcars$gear), Rowv = NA, Colv = NA, revC = TRUE,
         ylab = "Number of cylinders")
 ```
 
+From time to time it is reasonable to scale the color-coding according
+to all values, column wise or row wise (the default). We could set this
+by the argument `scale`.
+
+```{r}
+heatmap(table(mtcars$cyl, mtcars$gear), Rowv = NA, Colv = NA, revC = TRUE,
+        scale = "row",
+        main = "Number of cylinders vs. number of gears",
+        xlab = "Number of gears",
+        ylab = "Number of cylinders")
+```
+
 ### Using ggplot2 package
 
-First of all we have to load the `ggplot2` package.
+First of all we have to load the `ggplot2` package. If `ggplot2` is not
+installed, please use `install.packages("ggplot2")` to do so.
 
 ```{r}
 library(ggplot2)
@@ -239,7 +310,7 @@ it enables us to adjust the graphic in more detail. We also start with
 the initial cross table, but turn it into a data frame
 
 ```{r}
-df_cars <- data.frame(table(mtcars$cyl, mtcars$gear))
+df_cars <- data.frame(table(mtcars$cyl, mtcars$gear, dnn = list("cylinder","gears")))
 
 df_cars
 ```
@@ -250,270 +321,102 @@ on the `y` axis and which numbers should the cells be filled with
 (`fill`). Finally we can add title and labels as before.
 
 ```{r}
-ggplot(df_cars, aes(x = Var2, y = Var1, fill = Freq)) +
+ggplot(df_cars, aes(x = gears, y = cylinder, fill = Freq)) +
   geom_tile() +
   labs(main = "Number of cylinders vs. number of gears",
        x = "Number of gears",
        y = "Number of cylinders")
 ```
 
-## Scatter plot
-
-It is used to explore the relationship between two continuous variables
-
-### Using base R
-
-Example: Does voters *Income* affect *Turnout* at the polls?
-
-`plot(x)` to plot scatter plot. NA are omitted by default.
+Adjusting the scaling of this heat map is also a little bit more complex
+than before, since we have to apply `scale()` to the initial table. The
+argument `center` determines the new central value and the argument
+`scale` determines the way we scale the values. `scale = FALSE` does no
+scaling, `scale = TRUE` gives row scaled values and `scale = c(15,12,5)`
+results (in this case) in a column scaling.
 
 ```{r}
-# Deleting NA
-obama_vs_mccain_turnout_non_na = obama_vs_mccain[!is.na(obama_vs_mccain$Turnout), ]
-# plotting scatter plot
-plot(obama_vs_mccain_turnout_non_na$Income, obama_vs_mccain_turnout_non_na$Turnout)
-# or using with command
-with(obama_vs_mccain_turnout_non_na, plot(Income, Turnout))
+df_cars_scaled <- data.frame(scale(
+  table(mtcars$cyl, mtcars$gear, dnn = list("cylinder","gears")),
+  center = FALSE, scale = c(15,12,5)))
+
+ggplot(df_cars_scaled, aes(x = gears, y = cylinder, fill = Freq)) +
+  geom_tile() +
+  labs(main = "Number of cylinders vs. number of gears",
+       x = "Number of gears",
+       y = "Number of cylinders")
 ```
 
-We can edit the plot by using various parameters as described in the
-help document `? plot` or `?? plot`
+## Bar chart
+
+A bar chart displays the amount of of a discrete categorical data via
+the height or length of a bar. Using a bar chart is therefore a visual
+alternative for using a table.
+
+As an example we will again use the data set `mtcars` which includes
+information about 32 different cars, e.g. the number of cylinders `cyl`.
 
 ```{r}
-with(obama_vs_mccain_turnout_non_na, plot(Income, Turnout, type = "p", main = "Scatter plot of Turnout versus Incoms",
-                                          sub= "Obaba Vs McCain", xlab = "varage income", ylab = "Turnout percentage",
-                                          col = "red", pch = 19, cex = 1.5 ))
+mtcars
 ```
 
-Positive correlation between income and turnout
-
-### Using ggplot2 package
-
-Example: Does voters *Income* affect *Turnout* at the polls?
-
-`ggplot()` to construct a plot. It takes a *dataframe* as its first
-argument and an *aesthetic* as its second.
-
-`geom_...()` to add e.g. points/line on the plot
-
 ```{r}
-library(ggplot2)
-gg1 = ggplot(obama_vs_mccain_turnout_non_na, aes(Income, Turnout, colour = Region)) + # colour points by region
-geom_point(shape = 20)
-print(gg1)
-```
-
-To draw individual plots for each region, we add a *facet* using the
-function `facet_wrap`.
-
-```{r}
-gg2 = gg1 + 
-  facet_wrap(~ Region, ncol = 5) +
-  theme(axis.text.x = element_text(angle = 30, hjust = 1))   # to rotate x axis
-plot(gg2)
-  
-```
-
-## Line plot
-
-It is often used to explore how a continuous variable changes over time.
-It provides information about trend.
-
-**Data:** we will use the crab data **crab_tag** in this section.
-
-```{r}
-# Extracting data from package
-#data(crab_tag, package = "learningr")
-load(file = "data/crab_tag.rda")
-crab_tag_daylog = crab_tag$daylog 
-str(crab_tag_daylog)
+table(mtcars$cyl, dnn = list("cylinders"))
 ```
 
 ### Using base R
 
-**Example**: Draw a line plot of max depth against date
+As we can see the data set `mtcars` lists different cars in their rows
+including information about the number of cylinders `cyl`. To create a
+bar chart depicting the number of cars with a certain amount of
+cylinders, we can not use this raw data, since this information is not
+directly part of the data set.
 
-`plot(x)` to plot line plot, just as scatter plot but with the option
-`type = "l"`. The `plot()` function can be used to plot many other types
-of plot.
-
-```{r}
-# Drawing line plot
-with(
-crab_tag_daylog,
-plot(Date, Max.Depth, type = "l")
-)
-```
-
-Inverting the y axis and assigning limits to make it look nice
+To create such a bar chart we first have to extract the required
+information out of the data set. Luckily `table()` does exactly what we
+want. If we use it and turn the result via `data.frame()` into a data
+frame (so we have access to the row listing the counts), we can use
+`barplot()` to create the respective bar chart.
 
 ```{r}
-with(
-crab_tag_daylog,
-plot(Date, -Max.Depth, type = "l", ylim = c(-max(Max.Depth)-10, 10)) 
-)
-```
-
-Example: Draw a line plot for max and min depth against date on the same
-figure using different colours.
-
-`lines()` To draw additional lines on an existing plot. The equivalent
-for scatterplot is `points()`.
-
-```{r}
-with(
-crab_tag_daylog,
-plot(Date, -Max.Depth, type = "l", ylim = c(-max(Max.Depth)-10, 10)) 
-)
-# Adding the lines for min depth on the existing plot of max depth
-with(
-crab_tag$daylog,
-lines(Date, -Min.Depth, col = "blue")
-)
-```
-
-**Quick Exercise**: On the scatter plot of turnout Vs income plotted in
-previous section, increase the income by 300 and plot the new scatter
-plot on the existing plot. Use different colours.
-
-### Using ggplot2 package
-
-**Example**: Draw a line plot of max depth against date
-
-Swapping a scatter plot for a line plot is as simple as swapping
-`geom_point` for `geom_line`
-
-```{r}
-ggplot(crab_tag_daylog, aes(Date)) +
-geom_line(aes(y = -Max.Depth), colour = "#a83b48") + # google "colour picker" to get the codes
-geom_line(aes(y = -Min.Depth), colour = "darkgrey")
-```
-
-## Box plot
-
-A box plot is a visualization of the distribution of numerical data.
-Will we use the data set `mtcars` which incorporates fuel consumption
-and ten aspects design and performance for 32 different cars. First we
-have a short look into our data.
-
-```{r}
-head(mtcars)
-```
-
-Since this data set is part of base **R**, we can use the R help to get
-a better understanding what the columns mean.
-
-```{r}
-?mtcars
-```
-
-Lets say we are interested in the distribution of the fuel consumption
-`mpg` of the different cars. As we have seen before we can use the
-`summary` function to get a (numerical) overview about the distribution
-of the data.
-
-```{r}
-summary(mtcars$mpg)
-```
-
-That may answer some of our question regarding the over all fuel
-consumption of the cars in the data set, but it es not very easy to gasp
-and gets very overwhelming if we want to compare different distributions
-of fuel consumption (e.g. distinguished by number of cylinders).
-
-### Using base R
-
-Using a box plot for visualizing puts all the above information in one
-graphic.
-
-```{r}
-boxplot(mtcars$mpg)
-```
-
-Since the single plot includes all the information from before it needs
-some information to be understood completely.
-
--   The Median is marked by the thick black line inside the grey box.
-
--   The 1st and 3rd quartile are the lower and upper end of the grey
-    box, therefore $50\%$ of the values, including the median, are
-    located inside the grey box.
-
--   The two antennas/whiskers give the range including (roughly) $95\%$
-    of the data points.
-
--   Values outside this range are sometimes depicted as singular data
-    points.
-
-We can also use box plots to quickly compare the distribution of the
-fuel consumption for different number of cylinders `cyl` or number of
-gears `gear`.
-
-To do that we have to give `boxplot` a so called formula describing the
-relation we are interested in. A formula connects the (numeric) variable
-we are interested in (e.g. `mgp`) via `~` with the grouping variables,
-such as `cyl` or `gear`, usually a factor.
-
-```{r}
-boxplot(mpg ~ cyl, data = mtcars)
-boxplot(mpg ~ gear, data = mtcars)
-boxplot(mpg ~ cyl + gear, data = mtcars)
-```
-
-As before with other plots we have some basic options to manipulate the
-appearance of the plots, e.g. add labels.
-
-```{r}
-boxplot(mtcars$mpg,
-        main="Boxplot von mpg gruppiert nach cyl",
-        xlab="Zylinder (cyl)", ylab="Miles per Gallon (mpg)")
-```
-
-We can also manually adjust the names of the groupes
-
-```{r}
-boxplot(mpg ~ vs, data = mtcars, names  = c("V-shaped", "Straight"))
+cyl_table <- data.frame(table(mtcars$cyl, dnn = list("cylinders")))
+cyl_table
+barplot(height = cyl_table$Freq, names = cyl_table$cylinders,
+        main = "Amount of cars with respective number of cylinders",
+        xlab = "Number of cylinders")
 ```
 
 ### Using ggplot2 package
 
-Again for further and more specific adjustment we could use `ggplot2`
-instead of base **R**.
+If not already done, please load the `ggplot2` package.
 
 ```{r}
 library(ggplot2)
 ```
 
-As with nearly every plot done with `ggplot` we start with making
-`ggplot` familiar with the data we are using and which parts we want to
-visualize. As before we want to use the data set `mtcars` and display
-the fuel consumption `mpg`. We want to display the box plot vertically
-we assign the variable `mpg` to the y-axis.
+Using `ggplot2` has the advantage that we can feed our data directly to
+the 'plotting'-function without count the values of which amount we are
+interested in 'manually'. We can give our data set to `ggplot()`, and
+specify in `aes()` that we are interested to plot `cyl` a long the
+x-axis, by setting `x = cyl`. Since the numbers in `cyl` represent
+categories and not (directly) numbers, we have to use `as.factor()` on
+the variable `cyl`. After this initial step, we could create the bar
+chart with adding `geom_bar()`, where we can specify details about the
+bar chart, and `labs()` to set all kinds of labels for our graphic.
 
 ```{r}
-ggplot(mtcars, aes(y = mpg)) + 
-  geom_boxplot() + 
-  labs(title = "Boxplot fuel consumption",
-       y = "Miles per Gallon (mpg)")
-```
-
-When we want to plot box plot the data grouped in the different numbers
-of cylinders `cyl` we have to make sure that the variable we use to
-group the data is a factor. We can achieve this by using `as.factor()`.
-
-```{r}
-ggplot(mtcars, aes(x = as.factor(cyl), y = mpg)) +
-  geom_boxplot() +
-  labs(title = "Boxplot fuel consumption",
-       x = "Number of cylinder (cyl)",
-       y = "Miles per Gallon (mpg)")
+ggplot(mtcars, aes(x = as.factor(cyl))) +
+  geom_bar() +
+  labs(title = "Amount of cars with respective number of cylinders",
+       x = "Number of cylinders",
+       y = "Number of cars")
 ```
 
 ## Histogram
 
-Histograms are a very basic way to display a approximation of the
+Histograms are a very basic way to display an approximation of the
 distribution of a given variable. In this example we want visualize the
-data in `airquality` that include measurements on New York from May to
+data in `airquality` that includes measurements in New York from May to
 September 1973.
 
 First we have a short look into the data.
@@ -571,14 +474,14 @@ case you have not loaded `ggplot2` please execute the following line.
 library(ggplot2)
 ```
 
-As always with `ggplot2` we first have to tell what data we are using by
-`ggplot()` and specifying what variable we are interested in. Afterwards
-we can create the histogram with `geom_histogram()`. As before not
-giving any information about the wanted bins leads to `ggplot` deciding
-how to distribute the bins according to the data. We can either choose
-the number of bins by `bins`, the width of the bins by `binwidth` or
-specify where to separate between bins with `breaks`. Each of these
-arguments overwrites the use of the former.
+We first have to tell `ggplot2` what data we are using by `ggplot()` and
+specifying that we want to display `Wind` on the x-axis. Afterwards we
+can create the histogram with `geom_histogram()`. As before not giving
+any information about the wanted bins leads to `ggplot` deciding how to
+distribute the bins according to the data. We can either choose the
+number of bins by `bins`, the width of the bins by `binwidth` or specify
+where to separate between bins with `breaks`. Each of these arguments
+overwrites the use of the former.
 
 ```{r}
 ggplot(airquality, aes(x = Wind)) +
@@ -600,78 +503,283 @@ ggplot(airquality[airquality$Month %in% c(5,8),],
   scale_fill_manual(values = c(rgb(1,0,0,0.5), rgb(0,0,1,0.5)))
 ```
 
-## Bar chart
+## Box plot
 
-A bar chart displays the amount of of a discrete categorical data via
-the height or length of a bar. Using a bar chart is therefore a visual
-alternative for using a table.
-
-As an example we will use the data set `mtcars` which includes
-information about 32 different cars, e.g. the number of cylinders `cyl`,
-the number of forward gears `gear`, the kind of transmission am (0 =
-automatic, 1 = manual) and the engine design `vs` (0 = V-shaped, 1 =
-straight).
+A box plot is a visualization of the distribution of numerical data.
+Will we use the data set `mtcars` which incorporates fuel consumption
+and ten aspects design and performance for 32 different cars. First we
+have a short look into our data.
 
 ```{r}
-mtcars
+head(mtcars)
 ```
 
+As we have seen before we can use `summary()` to get a (numerical)
+overview about the distribution of the fuel consumption `mpg` (miles per
+gallon).
+
 ```{r}
-table(mtcars$cyl)
-table(mtcars$gear)
-table(mtcars$am)
-table(mtcars$vs)
+summary(mtcars$mpg)
 ```
+
+That may answer some of our question regarding the over all fuel
+consumption of the cars in the data set, but it es not very easy to gasp
+and gets very overwhelming if we want to compare different distributions
+of fuel consumption (e.g. distinguished by number of cylinders).
 
 ### Using base R
 
-As we can see the data set `mtcars` lists different cars in their rows
-including information about the number of cylinders `cyl`. To create a
-bar chart depicting the number of cars with a certain amount of
-cylinders, we can not use this data set directly, since this information
-is not directly part of the data set.
-
-To create such a bar chart we first have to extract the required
-information out of the data set. Luckily `table()` does exactly what we
-want. If we use it and turn the result via `data.frame()` into a data
-frame (so we have access to the row listing the counts), we can use
-`barplot()` to create the respective bar chart.
+Using a box plot for visualizing puts all the above information in one
+graphic.
 
 ```{r}
-cyl_table <- data.frame(table(mtcars$cyl))
-cyl_table
-barplot(height = cyl_table$Freq, names = cyl_table$Var1,
-        main = "Amount of cars with respective number of cylinders",
-        xlab = "Number of cylinders")
+boxplot(mtcars$mpg)
+```
+
+Since the single plot includes all the information from before it needs
+some knowledge to be understood completely.
+
+-   The Median is marked by the thick black line inside the grey box.
+
+-   The 1st and 3rd quartile are the lower and upper end of the grey
+    box, therefore $50\%$ of the values, including the median, are
+    located inside the grey box.
+
+-   The two antennas/whiskers give the range including (roughly) $95\%$
+    of the data points.
+
+-   Values outside this range are sometimes depicted as singular data
+    points.
+
+We can also use box plots to quickly compare the distribution of the
+fuel consumption for different number of cylinders `cyl` or number of
+gears `gear`.
+
+To do that we have to give `boxplot` a so called formula describing the
+relation we are interested in. A formula connects the (numeric) variable
+we are interested in (e.g. `mgp`) via `~` with the grouping variables,
+such as `cyl` or `gear`, usually as factors.
+
+```{r}
+boxplot(mpg ~ cyl, data = mtcars)
+boxplot(mpg ~ gear, data = mtcars)
+```
+
+As before with other plots we have some basic options to manipulate the
+appearance of the plots, e.g. add labels.
+
+```{r}
+boxplot(mtcars$mpg,
+        main="Boxplot von mpg gruppiert nach cyl",
+        xlab="Zylinder (cyl)", ylab="Miles per Gallon (mpg)")
+```
+
+We can also manually adjust the names of the categories.
+
+```{r}
+boxplot(mpg ~ vs, data = mtcars, names  = c("V-shaped", "Straight"))
 ```
 
 ### Using ggplot2 package
 
-If not already done, please load the `ggplot2` package.
+Again for further and more specific adjustment we could use `ggplot2`
+instead of base **R**.
 
 ```{r}
 library(ggplot2)
 ```
 
-Using `ggplot2` has the advantage that we can feed our data directly to
-the 'plotting'-function without count the values of which amount we are
-interested in 'manually'. We can give our data set to `ggplot()`, and
-specify in `aes()` that we are interested to plot `cyl` a long the
-x-axis. Since the numbers in `cyl` represent categories and not
-(directly) numbers, we have to use `as.factor()`. After this initial
-step, we could create the bar chart with adding `geom_bar()`,where we
-can specify details about the bar chart, and `labs()` to set all kinds
-of labels for our graphic.
+As with nearly every plot done with `ggplot` we start with making
+`ggplot` familiar with the data we are using and which parts we want to
+visualize. As before we want to use the data set `mtcars` and display
+the fuel consumption `mpg`. Since we want to display the box plot
+vertically we assign the variable `mpg` to the y-axis.
 
 ```{r}
-ggplot(mtcars, aes(x = as.factor(cyl))) +
-  geom_bar() +
-  labs(title = "Amount of cars with respective number of cylinders",
-       x = "Number of cylinders",
-       y = "Number of cars")
+ggplot(mtcars, aes(y = mpg)) + 
+  geom_boxplot() + 
+  labs(title = "Boxplot fuel consumption",
+       y = "Miles per Gallon (mpg)")
 ```
 
-## Additional visulisations using gglot2 package
+If we want to plot the data grouped in the different numbers of
+cylinders `cyl` we have to make sure that the variable we use to group
+the data is a factor. We can achieve this by using `as.factor()`.
+
+```{r}
+ggplot(mtcars, aes(x = as.factor(cyl), y = mpg)) +
+  geom_boxplot() +
+  labs(title = "Boxplot fuel consumption",
+       x = "Number of cylinder (cyl)",
+       y = "Miles per Gallon (mpg)")
+```
+
+## Line plot
+
+For continuous data depending on time we often use a line plot, since
+the the time points often are not equally distributed and a linear
+interpolation between data points is a reasonable guess. For
+demonstration we will use the data set `crab_tag` from the `learningr`
+package.
+
+```{r}
+# Extracting data from package
+#data(crab_tag, package = "learningr")
+load(file = "data/crab_tag.rda")
+crab_tag_daylog = crab_tag$daylog 
+str(crab_tag_daylog)
+```
+
+### Using base R
+
+We want to visualize `Max.Depth` depending on `Date` via a line plot. To
+do this in base R we can simply use `plot()` with the first variable as
+the first argument `x` and the second variable as the second argument
+`y`. To get a line plot we also have to set `type = "l"`, since `plot()`
+is capable of many different kinds of plots.
+
+```{r}
+# Drawing line plot
+plot(crab_tag_daylog$Date, crab_tag_daylog$Max.Depth, type = "l")
+```
+
+Since the `Max.Depth` describes a depth it would be nice to visualize
+this accordingly. To adjust the plot, we can simply assign a `-` in
+front of the data and to determine the scaling of the y-axis, we can use
+`ylim`.
+
+```{r}
+plot(crab_tag_daylog$Date, -crab_tag_daylog$Max.Depth, 
+     type = "l", ylim = c(-max(crab_tag_daylog$Max.Depth)-10, 10)) 
+```
+
+We can draw multiple lines in the same plot, e.g. if we want to
+visualize `Max.Depth` and `Min.Depth` simultaneously. We just create the
+line plot for the first variable and and create the second line in the
+plot with `line()`. To distinguish the lines we could change their
+colors by the argument `col`.
+
+```{r}
+plot(crab_tag_daylog$Date, -crab_tag_daylog$Max.Depth, 
+     type = "l", ylim = c(-max(crab_tag_daylog$Max.Depth)-10, 10))
+# Adding the lines for min depth on the existing plot of max depth
+
+lines(crab_tag_daylog$Date, -crab_tag_daylog$Min.Depth, col = "blue")
+```
+
+### Using ggplot2 package
+
+We can do the same with `ggplot2`. If not done yet, load the package
+with the following line.
+
+```{r}
+library(ggplot2)
+```
+
+We first hand `ggplot()` the data we want to use and tell it in `aes()`
+that we want `Date` along the x-axis. In the second step we add the line
+via `geom_line()` and the variable it should show. If we want to add
+another line depicting another variable we simply can add the same
+command with a different variable. As before we can give different
+colors to the lines with the argument `colour`.
+
+```{r}
+ggplot(crab_tag_daylog, aes(x = Date)) +
+geom_line(aes(y = -Max.Depth), colour = "#a83b48") + # google "colour picker" to get the codes
+geom_line(aes(y = -Min.Depth), colour = "darkgrey")
+```
+
+## Scatter plot
+
+If we want to visualize the relationship of two continuous variables a
+practicable thing to do is to use a scatter plot. Each variable is
+assigned the role of a dimension and the resulting data points are then
+depicted in the resulting two-dimensional space (of course we could do
+the same with more than two variables, but using more then three becomes
+harder to visualize properly).
+
+To demonstrate this plot and its creation we want to come back to the
+data set `obama_vs_mccain` from the begining of the lecture.
+
+```{r}
+load(file ="data/obama_vs_mccain.rda")
+```
+
+### Using base R
+
+If we are interested in the correlation of `Income` and `Turnout`, so to
+speak the question if the income influences the turnout of the poll, we
+can use a scatter plot to get a visual impression, whether this is
+plausible or not.
+
+In base R we can simply use `plot()` to create a scatter plot. Since it
+has no build in mechanism to deal with missing values, we first have to
+clean our data of these. Afterwards we can hand over the data we want to
+use for the x-axis `x` and y.axis `y` respectively.
+
+```{r}
+# Deleting NA
+obama_vs_mccain_turnout_non_na = obama_vs_mccain[!is.na(obama_vs_mccain$Turnout), ]
+# plotting scatter plot
+plot(obama_vs_mccain_turnout_non_na$Income, obama_vs_mccain_turnout_non_na$Turnout)
+# or using with command
+with(obama_vs_mccain_turnout_non_na, plot(Income, Turnout))
+```
+
+We can edit the plot by using various parameters as described in the
+help document `?plot` or `??plot`. For example we can change the color
+via `col`.
+
+```{r}
+plot(obama_vs_mccain_turnout_non_na$Income,
+     obama_vs_mccain_turnout_non_na$Turnout,
+     col = "red", pch = 20, cex = 3.5,
+     main = "Scatter plot of Turnout versus Incoms",
+     sub= "Obaba Vs McCain", xlab = "varage income", ylab = "Turnout percentage")
+```
+
+### Using ggplot2 package
+
+Alternatively to base R we can use `ggplot2` to create a scatter plot.
+If not already done, please load the `ggplot2` package by the following
+line.
+
+```{r}
+library(ggplot2)
+```
+
+To create a scatter plot showing the relation of `Income` and `Turnout`
+we have to first hand the data set of `ggplot()` and give details about
+the variables we want to show in `aes()`. Followed by that we use
+`geom_point()` to create the points of the scatter plot. We can change
+details of the plot by arguments of the function, e.g. the size of the
+dots by `size`.
+
+```{r}
+ggplot(obama_vs_mccain_turnout_non_na, aes(x = Income, y = Turnout)) +
+geom_point(size = 5)
+```
+
+We can use coloring to easily depict a third variable in our two
+dimensional plot, e.g. to examine the influence of `Region` on the other
+variables.
+
+```{r}
+ggplot(obama_vs_mccain_turnout_non_na, aes(x = Income, y = Turnout, color = Region)) +
+geom_point(size = 3)
+```
+
+To draw individual plots for category in `Region`, we add a *facet*
+using `facet_wrap()`.
+
+```{r}
+ggplot(obama_vs_mccain_turnout_non_na, aes(x = Income, y = Turnout)) +
+  geom_point(size = 3) + 
+  facet_wrap(~ Region, ncol = 5) +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))   # to rotate x axis
+```
+
+## Additional visualizations using ggplot2 package
 
 -   [ggplot2 references for further
     reading](https://r4ds.hadley.nz/data-visualize)
