@@ -1,0 +1,95 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Final exercise
+
+Welcome to the final day of the **Introduction to R** course. As a final exercise and a first own project (with a little guidance and support by us) we want to work with the data set about 18800 video games. You don't need any knowledge in this area, we will just use it as good example.
+
+## Package and Data import
+
+Before we start we need to load some packages. Please use the following code block to load `tidyr` and `ggplot2`. If these packages are not installed do so.
+
+```{r}
+
+
+```
+
+In the next step we want to import the data set from the file `video_games.csv`. Use `read.csv()` and the correct path to load it and save it as `raw_data`.
+
+```{r}
+ <- read.csv()
+```
+
+## Exploring the data
+
+Use `str()` to get an idea of the columns of `raw_data`.
+
+```{r}
+
+
+```
+
+*Are there some things that seem problematic or unuseful for us? List them in the following lines.*
+
+-   Leading white spaces in `platform`.
+
+-   Undesirable date format in `release_date`.
+
+-   Unneeded information in `summary`.
+
+-   Ratings `user_review` seem to be `numeric`, but are `chr`.
+
+```{r}
+head(raw_data)
+```
+
+## Data cleaning
+
+We want to proceed with cleaning our data and solving the issues we found.
+
+### `summary`
+
+The column `summary` might include interesting things, but is of no need for us. Therefore we don't want to carry it all the way. Use the next code block, to drop that column and safe the new data frame as `data`.
+
+```{r}
+
+```
+
+### `release_date`
+
+If we have a look in the column `release_date`, we notice that the dates have a undesirable format. We just want the information about the year and just in case keep the first part as well. Fill the gaps in the following code to separate the dates in `release_date` into a "month_day" and "year" part. What separator `sep` is used in the initial column? If you have questions about the function `separate()` first use the build-in help.
+
+```{r}
+data <- separate(data = , col = , into = c("month_day", "year"), sep = )
+```
+
+After the separating `year` from `month_day` we end with `chr` as entries. Use the next code block to change the entries of `year` to `numeric`.
+
+```{r}
+data$year <- 
+```
+
+### `user_review`
+
+Looking into the column `user_review` we see that the entries are `chr`. Since these are basically numbers use the next block to change their data type to something better suitable. You might get a warning, that some entries are converted to `NA`, that is not a problem.
+
+```{r}
+data$user_review <- 
+```
+
+### `platform`
+
+Maybe you have not spotted the issue with the entries in `platform`. Use a function to have a look at the first (six) entries of that column.
+
+```{r}
+
+
+```
+
+The entries all have a leading white space that is not very aesthetic and might cause problems later. Therefore apply `trimws()` to the column and assign the result to the old column.
+
+```{r}
+ <-  trimws()
+```
