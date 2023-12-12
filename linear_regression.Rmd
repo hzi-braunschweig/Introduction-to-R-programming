@@ -1,0 +1,162 @@
+---
+title: "Introduction to Linear Regression using R"
+author: |
+  | Bernard Silenou & Henrik Schanze 
+  |
+  | Department of Epidemiology, Helmholtz Centre for Infection Research, Braunschweig, Germany
+  |
+date: "Version on `r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    theme: united
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction 
+A regression is a statistical technique that relates a **dependent** variable to one or more **independent (explanatory)** variables. For example, age and height can be described using a linear regression model. Since a person's height increases as age increases, they have a linear relationship.
+ 
+Linear regression is a regression model that uses a **straight line** to describe the relationship between variables. It finds the line of best fit through your data by searching for the value of the regression coefficient(s) that minimizes the total error of the model.
+
+There are two main types of linear regression:
+
+- Simple linear regression uses only one independent variable and one dependent variable
+- Multiple (or multivaribale) linear regression uses two or more independent variables and  one dependent variable. Do not confuse this with multivariate regression, which means many measurement of the dependent variable, often used in longitudinal data or repeated measurements (out of scope). 
+
+## Simple linar regression
+The formula for a simple linear model is 
+$$ Y= \beta_0 + \beta_1X + \epsilon$$
+Where $\beta_0$ is the intercept,  $\beta_1$ the gradient and $\epsilon$ the error (or noise) term that cannot be explained perfectly by the model.
+
+The **model parameters** $\beta_0$ and $\beta_1$ are estimated from the data.
+
+**The linear function predicts the mean value of the outcome for a given value of the predictor variable.**
+
+The mean function of the outcome is given by $E(Y|X=x) = \beta_0 + \beta_1x$  
+
+The unexplained error term $\epsilon$  is a random variable and often assumed to $\sim N(0,\sigma^2)$
+
+Linear regression model aim to  estimate the model parameters in a way that the line fit the best with the data.
+
+The method to achieve this **best fitted** linear function is called **Ordinary Least Square (OLS)** method.
+
+OLS estimate the model parameters by minimizing **residual sum of squares (RSS)**.
+
+Estimated model parameters are denoted as $\hat{\beta_0}$ and  $\hat{\beta_1}$
+
+The estimated model will the be $\hat{Y}= \hat{\beta}_0 + \hat{\beta}_1X$
+
+Where $\hat{Y}$ is called the fitted value and represent the predicted mean value of the outcome for given value of predictor(s) X.
+
+**NB:** The predictor variable may be continuous, meaning that it may assume all values within a range, for example, age or height. Or it may be dichotomous, meaning that the variable may assume only one of two values, for example, 0 or 1 or a categorical variable with more that with more than two levels. *There is only one response or dependent variable, and it is continuous.* More on this will is covered in the course on Regression models
+
+## Multiple linear regerssiion
+
+Simple linear regression + one or more predictors.
+
+##  Exercise
+Task: Use cancer_reg.csv data and build a multivariate Ordinary Least Squares regression model to predict `TARGET_deathRate`
+```{r loading_data }
+cancer_reg <- read.csv("/home/bsi17/Introduction-to-R-programming/lecture_notebooks/data/cancer_reg.csv")
+```
+
+The function `lm()` can be used to fit a linear regression model
+```{r fitting_regression_model}
+str(cancer_reg)
+# simple linear regression model of TARGET_deathRate 
+m1 <- lm(formula = TARGET_deathRate ~  incidenceRate, data = cancer_reg)
+summary(m1)   #summary of model m1
+
+m2 <- lm(formula =TARGET_deathRate ~  povertyPercent, data = cancer_reg)
+summary(m2)   
+
+# multiple linear regression model of TARGET_deathRate 
+m3 <- lm(formula = TARGET_deathRate ~  incidenceRate + povertyPercent, data = cancer_reg)
+summary(m3) 
+
+m4 <- lm(formula =TARGET_deathRate ~., data = cancer_reg) # use . to specify all variables the data except the one mentioned (dependent variable)
+summary(m4)  
+# Why is the output having many rows?
+
+m5 <- lm(formula =TARGET_deathRate ~., data = cancer_reg[,!colnames(cancer_reg) %in% c("Geography", "binnedInc") ]) 
+summary(m5)
+# Did the estimates for incidenceRate differ from that of simple linear regression? It yes why?
+```
+
+Since each variable have different unit, to compare the relative strength of the various predictors within the model  we use standardized regression coefficients which can be obtain by transforming the outcome and predictor variables all to their standard scores $Z_i$, before running the regression.
+$$Z_i = \frac{x_i-\mu}{\sigma}$$
+The function `scale()` computes the standardised values.
+```{r}
+#Fiting a standardized regression model
+m3_sd <- lm(formula =scale(TARGET_deathRate) ~ scale(incidenceRate) + scale(povertyPercent), data = cancer_reg) 
+summary(m3_sd) #coefficients are standardized
+```
+Thus, `incidenceRate` has the largest strength on the outcome
+
+## Model diagnostics
+
+### Linear Regression Assumptions
+Regression results can be misleading, thus We have to make sure that the assumptions are met when building regression models. Below are a few assumptions, more exist
+
+- **Linearity**: the relationships between the predictors and the outcome variable should be linear. This can be illustrated by scatter plots showing a linear or curvilinear relationship.
+
+- **Normality**: the **residual should be normally distributed**. This can be checked by either using a normal probability plot or a histogram.
+
+- **Multicollinearity** is another assumption, meaning that the independent variables are not highly correlated with each other. Multicollinearity makes it difficult to identify which variables better explain the dependent variable. This assumption is verified by computing a matrix of Pearson’s bivariate correlations among all the independent variables. If there is no collinearity in the data, then all the values should be less than 0.8. 
+
+- **Homoscedasticity** assumes that the variance of the residual errors is similar across the value of each independent variable. One way of checking that is through a plot of the predicted values against the standardized residual values to see if the points are equally distributed across all the values of the independent variables.
+
+- **Model specification**: The model should be properly specified (including all relevant variables, and excluding irrelevant variables)
+
+- **Independence**: The errors associated with one observation are not correlated with the errors of any other observation.
+
+```{r}
+# loading packages needed to diagnosis, there are multiple out there
+library(carData)
+library(car)
+```
+
+### Checking for normality
+Many researchers believe that multiple regression requires normality. This is not the case. Normality of residuals is only required for valid hypothesis testing, that is, the normality assumption assures that the p-values for the t-tests and F-test will be valid. Normality is not required in order to obtain unbiased estimates of the regression coefficients. OLS regression merely requires that the residuals (errors) be identically and independently distributed. Furthermore, there is no assumption or requirement that the predictor variables be normally distributed. If this were the case than we would not be able to use dummy coded variables in our models.
+
+Furthermore, because of large sample theory if we have large enough sample size we do not even need the residuals be normally distributed.
+
+However for small sample sizes the normality assumption is required.
+
+To test normality we use qq-normal plot of residuals.
+```{r}
+qqnorm(m3$residuals)
+qqline(m3$residuals)  
+```
+In an iodeal situation, the residuals should fall on the line.
+
+### Checking for constant error variance (homoscedasticity)
+If the model is well-fitted, there should be no pattern to the residuals plotted against the fitted values. If the variance of the residuals is non-constant then the residual variance is said to be “heteroscedastic.” There are graphical and non-graphical methods for detecting heteroscedasticity. A commonly used graphical method is to plot the residuals versus fitted (predicted) values.
+```{r}
+#residuals vs fitted value plot
+plot( m3$fitted.values, m3$residuals) # or plot( m3$residuals ~  m3$fitted.values,)
+# drasing a horizontal line
+abline(h = 0, lty=2)
+```
+
+
+### Checking for linear relationships
+To check linearity residuals should be plotted against the fitted value ($\hat{Y}$) as well as other predictors. If any of these plots show systematic shapes, then the linear model is not appropriate and some nonlinear terms may need to be added. In package car, function residualPlots() produces those plots. Also give use a test of linear model vs. adding quadratic term for each variable (test for curvature).
+```{r}
+par(mfrow = c(2,2))
+plot(m3$fitted.values, m3$residuals)
+plot(cancer_reg$incidenceRate, m3$residuals)
+plot(cancer_reg$povertyPercent, m3$residuals)
+```
+
+
+## Resources
+-   [UCLA R repository](https://stats.oarc.ucla.edu/r/)
+-   [Online R books for free](https://bookdown.org/)
