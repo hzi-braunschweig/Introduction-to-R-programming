@@ -103,24 +103,18 @@ length(unique(data$name))/length(data$name)
 The next line use some technique we have not discussed and creates the new data frame `unique_games`. Are you able do understand the code? Execute the block and try to fill the following list.
 
 ```{r}
-unique_games <- data |> group_by(name) |> 
-  mutate(score_min = min(user_review)) |> 
+games <- data |> group_by(name) |> 
   mutate(score_mean = mean(user_review)) |>
-  mutate(score_max = max(user_review)) |>
   mutate(year = min(year)) |> 
-  select(c(name, year, score_min, score_mean, score_max)) |> 
+  select(c(name, year, score_mean)) |> 
   distinct() |> ungroup()
 ```
 
 -   `name`: The name of a unique game
 
--   `score_min`: The minimum user review the game received over all platforms
-
 -   `score_mean`: The mean user review the game received over all platforms
 
--   `score_max`: The maximum user review the game received over all platforms
-
--   `year_med`: The median of the release year over all platforms
+-   `year`: The first year the game was released on any platform
 
 ## Data Visualization
 
@@ -151,23 +145,35 @@ ggplot(data = data, aes(x = platform)) +
 We are now interested in the released games per year. Use the following code chunk to create a table listing how many games were released in each year. Use the data frame `unique_games` for this, since this data sets only lists every game once.
 
 ```{r}
-table(unique_games$year)
+table(games$year)
 ```
 
 As before create a graphic to visualize this the same information.
 
 ```{r}
-barplot(table(unique_games$year))
+barplot(table(games$year))
 ```
 
 ```{r}
-ggplot(data = unique_games, aes(x = year)) +
+ggplot(data = games, aes(x = year)) +
   geom_bar()
 ```
 
+### Platforms and years
+
+We have seen that the number of released games is not evenly distributed among `platform` and `year`. To understand the underlying reasons better we want to visualize the influence of both variables simultaneously on the number of releases. To do use the following code block to create a heat map depicting the releases per `year` and `platform`.
+
+```{r}
+heatmap(table(data$year, data$platform), Rowv = NA, Colv = NA, scale = "row")
+```
+
+Use different scaling to visualize different mechanisms. *What do you spot?*
+
+-   
+
 ### Review distribution
 
-The next interesting part is the information about the user reviews. Think about a good way to present the distribution of user reviews and use the next block to create a graphic. *You are free to decide if you want to use `data` or `unique_games`*.
+The next interesting part is the information about the user reviews. Think about a good way to present the distribution of user reviews and use the next block to create a graphic. *You are free to decide if you want to use `data` or `games`*.
 
 ```{r}
 hist(data$user_review)
@@ -177,9 +183,9 @@ ggplot(data = data, aes(x = user_review)) +
 ```
 
 ```{r}
-hist(unique_games$score_mean)
+hist(games$score_mean)
 
-ggplot(data = unique_games, aes(x = score_mean)) +
+ggplot(data = games, aes(x = score_mean)) +
   geom_histogram(breaks = seq(0,10,1), na.rm = TRUE)
 ```
 
@@ -194,18 +200,24 @@ ggplot(data = data, aes(x = as.factor(year), y = user_review)) +
 ```
 
 ```{r}
-boxplot(score_mean ~ year, data = unique_games)
+boxplot(score_mean ~ year, data = games)
 
-ggplot(data = unique_games, aes(x = as.factor(year), y = score_mean)) +
+ggplot(data = games, aes(x = as.factor(year), y = score_mean)) +
   geom_boxplot() +
   theme(axis.text.x = element_text(angle = 90))
 ```
 
 ## Linear Regression
 
+Finally we want to do some linear regression on our data to examine the influence of `year` on the `user_review`. Use the following code block to do such a linear regression and have a view in the results. *Does anything looks strange to you?*
+
 ```{r}
-data$years_since_1995 = data$year - 1995
-summary(lm(user_review ~ years_since_1995, data = data))
+summary(lm(user_review ~ year, data = data))
+```
+
+```{r}
+unique_games$years_since_1995 = unique_games$year - 1995
+summary(lm(score_mean ~ years_since_1995, data = unique_games))
 ```
 
 ## Questions
