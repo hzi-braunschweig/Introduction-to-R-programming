@@ -12,7 +12,7 @@ Welcome to the final day of the **Introduction to R** course. As a final exercis
 Before we start we need to load some packages. Please use the following code block to load `tidyr` and `ggplot2`. If these packages are not installed do so.
 
 ```{r}
-library(tidyr)
+library(tidyverse)
 library(ggplot2)
 ```
 
@@ -92,10 +92,52 @@ The entries all have a leading white space that is not very aesthetic and might 
 data$platform <-  trimws(data$platform)
 ```
 
+### Simplifying the data
+
+In our data set we distinguish between the same game released on different platforms. If we are more interested in the game this might not be reasonable. Use the next block to calculate the fraction of unique games to the total number of rows.
+
+```{r}
+length(unique(data$name))/length(data$name)
+```
+
+The next line use some technique we have not discussed and creates the new data frame `unique_games`. Are you able do understand the code? Execute the block and try to fill the following list.
+
+```{r}
+unique_games <- data |> group_by(name) |> 
+  mutate(score_min = min(user_review)) |> 
+  mutate(score_mean = mean(user_review)) |>
+  mutate(score_max = max(user_review)) |>
+  mutate(year = min(year)) |> 
+  select(c(name, year, score_min, score_mean, score_max)) |> 
+  distinct() |> ungroup()
+```
+
+-   `name`: The name of a unique game
+
+-   `score_min`: The minimum user review the game received over all platforms
+
+-   `score_mean`: The mean user review the game received over all platforms
+
+-   `score_max`: The maximum user review the game received over all platforms
+
+-   `year_med`: The median of the release year over all platforms
+
 ## Data Visualization
+
+In this section we create some visualizations to better understand and present the data.
+
+### Games per platform
+
+First we are interested in the games released on different platforms the games in our data sets were released on. Create a table listing the games released on each console (the notebook might shift the output, for a better view have a look in the console.). *What is the platform with the most released games?*
 
 ```{r}
 table(data$platform)
+```
+
+For a better and quicker overview we want to create a graphic to visualize the same information.Use the following code block to create such a graphic.
+
+```{r}
+barplot(table(data$platform), las = 2)
 ```
 
 ```{r}
@@ -104,13 +146,66 @@ ggplot(data = data, aes(x = platform)) +
   theme(axis.text.x = element_text(angle = 90))
 ```
 
+### Games per year
+
+We are now interested in the released games per year. Use the following code chunk to create a table listing how many games were released in each year. Use the data frame `unique_games` for this, since this data sets only lists every game once.
+
 ```{r}
-ggplot(data = data, aes(x = user_review)) +
-  geom_histogram(breaks = seq(0,10,0.5), na.rm = TRUE)
+table(unique_games$year)
+```
+
+As before create a graphic to visualize this the same information.
+
+```{r}
+barplot(table(unique_games$year))
 ```
 
 ```{r}
+ggplot(data = unique_games, aes(x = year)) +
+  geom_bar()
+```
 
+### Review distribution
+
+The next interesting part is the information about the user reviews. Think about a good way to present the distribution of user reviews and use the next block to create a graphic. *You are free to decide if you want to use `data` or `unique_games`*.
+
+```{r}
+hist(data$user_review)
+
+ggplot(data = data, aes(x = user_review)) +
+  geom_histogram(breaks = seq(0,10,1), na.rm = TRUE)
+```
+
+```{r}
+hist(unique_games$score_mean)
+
+ggplot(data = unique_games, aes(x = score_mean)) +
+  geom_histogram(breaks = seq(0,10,1), na.rm = TRUE)
+```
+
+How is the user review developing with time? Use the following code block to visualize the distribution of the different years. *Can you spot a trend?*
+
+```{r}
+boxplot(user_review ~ year, data = data)
+
+ggplot(data = data, aes(x = as.factor(year), y = user_review)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r}
+boxplot(score_mean ~ year, data = unique_games)
+
+ggplot(data = unique_games, aes(x = as.factor(year), y = score_mean)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+## Linear Regression
+
+```{r}
+data$years_since_1995 = data$year - 1995
+summary(lm(user_review ~ years_since_1995, data = data))
 ```
 
 ## Questions

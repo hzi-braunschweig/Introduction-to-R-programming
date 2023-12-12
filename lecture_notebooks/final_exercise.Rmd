@@ -13,7 +13,6 @@ Before we start we need to load some packages. Please use the following code blo
 
 ```{r}
 
-
 ```
 
 In the next step we want to import the data set from the file `video_games.csv`. Use `read.csv()` and the correct path to load it and save it as `raw_data`.
@@ -28,21 +27,20 @@ Use `str()` to get an idea of the columns of `raw_data`.
 
 ```{r}
 
-
 ```
 
 *Are there some things that seem problematic or unuseful for us? List them in the following lines.*
 
--   Leading white spaces in `platform`.
+-   
 
--   Undesirable date format in `release_date`.
+-   
 
--   Unneeded information in `summary`.
+-   
 
--   Ratings `user_review` seem to be `numeric`, but are `chr`.
+-   
 
 ```{r}
-head(raw_data)
+
 ```
 
 ## Data cleaning
@@ -68,7 +66,7 @@ data <- separate(data = , col = , into = c("month_day", "year"), sep = )
 After the separating `year` from `month_day` we end with `chr` as entries. Use the next code block to change the entries of `year` to `numeric`.
 
 ```{r}
-data$year <- 
+ <- as.numeric( )
 ```
 
 ### `user_review`
@@ -85,11 +83,100 @@ Maybe you have not spotted the issue with the entries in `platform`. Use a funct
 
 ```{r}
 
-
 ```
 
 The entries all have a leading white space that is not very aesthetic and might cause problems later. Therefore apply `trimws()` to the column and assign the result to the old column.
 
 ```{r}
- <-  trimws()
+ <-  trimws( )
+```
+
+### Simplifying the data
+
+In our data set we distinguish between the same game released on different platforms. If we are more interested in the game this might not be reasonable. Use the next block to calculate the fraction of unique games to the total number of rows.
+
+```{r}
+
+```
+
+The next line use some technique we have not discussed and creates the new data frame `unique_games`. Are you able do understand the code? Execute the block and try to fill the following list.
+
+```{r}
+unique_games <- data |> group_by(name) |> 
+  mutate(score_min = min(user_review)) |> 
+  mutate(score_mean = mean(user_review)) |>
+  mutate(score_max = max(user_review)) |>
+  mutate(year = min(year)) |> 
+  select(c(name, year, score_min, score_mean, score_max)) |> 
+  distinct() |> ungroup()
+```
+
+-   `name`:
+
+-   `score_min`:
+
+-   `score_mean`:
+
+-   `score_max`:
+
+-   `year_med`:
+
+## Data Visualization
+
+In this section we create some visualizations to better understand and present the data.
+
+### Games per platform
+
+First we are interested in the games released on different platforms the games in our data sets were released on. Create a table listing the games released on each console (the notebook might shift the output, for a better view have a look in the console.). *What is the platform with the most released games?*
+
+```{r}
+
+```
+
+For a better and quicker overview we want to create a graphic to visualize the same information.Use the following code block to create such a graphic.
+
+```{r}
+```
+
+### Games per year
+
+We are now interested in the released games per year. Use the following code chunk to create a table listing how many games were released in each year. Use the data frame `unique_games` for this, since this data sets only lists every game once.
+
+```{r}
+
+```
+
+As before create a graphic to visualize this the same information.
+
+```{r}
+```
+
+### Review distribution
+
+The next interesting part is the information about the user reviews. Think about a good way to present the distribution of user reviews and use the next block to create a graphic. *You are free to decide if you want to use `data` or `unique_games`*.
+
+```{r}
+
+```
+
+How is the user review developing with time? Use the following code block to visualize the distribution of the different years. *Can you spot a trend?*
+
+```{r}
+
+```
+
+## Linear Regression
+
+```{r}
+data$years_since_1995 = data$year - 1995
+summary(lm(user_review ~ years_since_1995, data = data))
+```
+
+## Questions
+
+*What is the game with the highest* `user_review` *from the year 2015?*
+
+```{r}
+data_ordered <- data[order(data$user_review, decreasing = TRUE),]
+data_ordered[data_ordered$year == 2015,][1, "name"]
 ```
