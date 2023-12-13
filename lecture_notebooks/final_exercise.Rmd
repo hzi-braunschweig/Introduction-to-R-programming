@@ -206,12 +206,3 @@ summary(lm( ~  + , data = ))
 ```
 
 A lot of the former significant categories of `platform` are not longer significant. *Do you have a good explanation for this phenomena? Hint: Have a look into one of the graphics you created.*
-
-## Questions
-
-*What is the game with the highest* `user_review` *from the year 2015?*
-
-```{r}
-data_ordered <- data[order(data$user_review, decreasing = TRUE),]
-data_ordered[data_ordered$year == 2015,][1, "name"]
-```
