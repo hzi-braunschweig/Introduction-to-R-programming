@@ -9,7 +9,7 @@ Welcome to the final day of the **Introduction to R** course. As a final exercis
 
 ## Package and Data import
 
-Before we start we need to load some packages. Please use the following code block to load `tidyr` and `ggplot2`. If these packages are not installed do so.
+Before we start we need to load some packages. Please use the following code block to load `tidyverse` and `ggplot2`. If these packages are not installed do so. Loading the first probably gives a big red return message listing all packages that are part of `tidyverse`.
 
 ```{r}
 library(tidyverse)
@@ -40,6 +40,8 @@ str(raw_data)
 
 -   Ratings `user_review` seem to be `numeric`, but are `chr`.
 
+If you need another look in the data use the following lines to do as you want.
+
 ```{r}
 head(raw_data)
 ```
@@ -58,21 +60,22 @@ data <- raw_data[,-c(4)]
 
 ### `release_date`
 
-If we have a look in the column `release_date`, we notice that the dates have a undesirable format. We just want the information about the year and just in case keep the first part as well. Fill the gaps in the following code to separate the dates in `release_date` into a "month_day" and "year" part. What separator `sep` is used in the initial column? If you have questions about the function `separate()` first use the build-in help.
+If we have a look in the column `release_date`, we notice that the dates have a undesirable format. We just want the information about the year and just in case keep the first part as well. Fill the gaps in the following code to separate the dates in `release_date` into a "month_day" and "year" part. What separator `sep` is used in the initial column to part the year from the rest? If you have questions about the function `separate()` try using the build-in help.
 
 ```{r}
 data <- separate(data = data, col = release_date, into = c("month_day", "year"), sep = ", ")
 ```
 
-After the separating `year` from `month_day` we end with `chr` as entries. Use the next code block to change the entries of `year` to `numeric`.
+What data type do the entries in `year` have after we split them from `month_day`? Use the next code block to change the entries of `year` to `numeric`.
 
 ```{r}
+typeof(data$year)
 data$year <- as.numeric(data$year)
 ```
 
 ### `user_review`
 
-Looking into the column `user_review` we see that the entries are `chr`. Since these are basically numbers use the next block to change their data type to something better suitable. You might get a warning, that some entries are converted to `NA`, that is not a problem.
+Looking into the column `user_review` we see that the entries are `chr`. Since these are basically numbers and we want to use them in such a way, use the next block to change their data type to something better suitable. You might get a warning, that some entries are converted to `NA`, that is not a problem.
 
 ```{r}
 data$user_review <- as.numeric(data$user_review)
@@ -86,7 +89,7 @@ Maybe you have not spotted the issue with the entries in `platform`. Use a funct
 head(data$platform)
 ```
 
-The entries all have a leading white space that is not very aesthetic and might cause problems later. Therefore apply `trimws()` to the column and assign the result to the old column.
+The entries all have a leading white space that is not very aesthetic and might cause problems later. Have a look into the documentation of `trimws()` (via `help()` or `?`) and apply it to `platform` and assign the result to the same column.
 
 ```{r}
 data$platform <-  trimws(data$platform)
@@ -94,7 +97,7 @@ data$platform <-  trimws(data$platform)
 
 ### Simplifying the data
 
-In our data set we distinguish between the same game released on different platforms. If we are more interested in the game this might not be reasonable. Use the next block to calculate the fraction of unique games to the total number of rows.
+In our data set we distinguish between the same game released on different platforms. If we are more interested in the game itself this might not be useful. Use the next block to calculate the fraction of unique games to the total number of rows.
 
 ```{r}
 length(unique(data$name))/length(data$name)
@@ -104,15 +107,15 @@ The next line use some technique we have not discussed and creates the new data 
 
 ```{r}
 games <- data |> group_by(name) |> 
-  mutate(score_mean = mean(user_review)) |>
+  mutate(score = mean(user_review)) |>
   mutate(year = min(year)) |> 
-  select(c(name, year, score_mean)) |> 
+  select(c(name, year, score)) |> 
   distinct() |> ungroup()
 ```
 
 -   `name`: The name of a unique game
 
--   `score_mean`: The mean user review the game received over all platforms
+-   `score`: The mean user review the game received over all platforms
 
 -   `year`: The first year the game was released on any platform
 
@@ -122,13 +125,13 @@ In this section we create some visualizations to better understand and present t
 
 ### Games per platform
 
-First we are interested in the games released on different platforms the games in our data sets were released on. Create a table listing the games released on each console (the notebook might shift the output, for a better view have a look in the console.). *What is the platform with the most released games?*
+First we are interested in the different platforms the games in our data sets were released on. Create a table listing the games released on each platform (the notebook might shift the output, for a better view have a look in the console.). *What is the platform with the most released games?*
 
 ```{r}
 table(data$platform)
 ```
 
-For a better and quicker overview we want to create a graphic to visualize the same information.Use the following code block to create such a graphic.
+For a better and quicker overview we want to create a graphic to visualize the same information. Use the following code block to create such a graphic.
 
 ```{r}
 barplot(table(data$platform), las = 2)
@@ -142,13 +145,13 @@ ggplot(data = data, aes(x = platform)) +
 
 ### Games per year
 
-We are now interested in the released games per year. Use the following code chunk to create a table listing how many games were released in each year. Use the data frame `unique_games` for this, since this data sets only lists every game once.
+The next interesting aspect might be the number of released games per year. Use the following code chunk to create a table listing how many games were released in each year. Use the data frame `unique_games` for this, since this data set only lists every game once.
 
 ```{r}
 table(games$year)
 ```
 
-As before create a graphic to visualize this the same information.
+Create a graphic of your choice that depicts the same information in easy understandable way.
 
 ```{r}
 barplot(table(games$year))
@@ -169,56 +172,73 @@ heatmap(table(data$year, data$platform), Rowv = NA, Colv = NA, scale = "row")
 
 Use different scaling to visualize different mechanisms. *What do you spot?*
 
--   
+-   Scaling column wise we can see the 'life cycle' of the platforms, e.g. 'Dreamcast' 2000-2001.
+
+-   Scaling row wise we can get an intuition of the 'dominating' platforms of each year, e.g. PC, Playstation 4 and Xbox One in 2016.
 
 ### Review distribution
 
-The next interesting part is the information about the user reviews. Think about a good way to present the distribution of user reviews and use the next block to create a graphic. *You are free to decide if you want to use `data` or `games`*.
+The next interesting part is the information about the user reviews. Think about a good way to present the distribution of user reviews and use the next block to create a graphic reflecting that. *You are free to decide if you want to use `data` or `games`*.
 
 ```{r}
 hist(data$user_review)
 
-ggplot(data = data, aes(x = user_review)) +
-  geom_histogram(breaks = seq(0,10,1), na.rm = TRUE)
+hist(games$score)
 ```
 
 ```{r}
-hist(games$score_mean)
+ggplot(data = data, aes(user_review)) +
+  geom_histogram(breaks = seq(0,10,1), na.rm = TRUE)
 
-ggplot(data = games, aes(x = score_mean)) +
+ggplot(data = games, aes(x = score)) +
   geom_histogram(breaks = seq(0,10,1), na.rm = TRUE)
 ```
 
-How is the user review developing with time? Use the following code block to visualize the distribution of the different years. *Can you spot a trend?*
+Does the user review changing over time? Use the following code block to visualize the distribution of the different years. *Can you spot a trend?*
 
 ```{r}
 boxplot(user_review ~ year, data = data)
 
-ggplot(data = data, aes(x = as.factor(year), y = user_review)) +
-  geom_boxplot() +
-  theme(axis.text.x = element_text(angle = 90))
+boxplot(score ~ year, data = games)
 ```
 
 ```{r}
-boxplot(score_mean ~ year, data = games)
+ggplot(data = data, aes(x = as.factor(year), y = user_review)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90))
 
-ggplot(data = games, aes(x = as.factor(year), y = score_mean)) +
+ggplot(data = games, aes(x = as.factor(year), y = score)) +
   geom_boxplot() +
   theme(axis.text.x = element_text(angle = 90))
 ```
 
 ## Linear Regression
 
-Finally we want to do some linear regression on our data to examine the influence of `year` on the `user_review`. Use the following code block to do such a linear regression and have a view in the results. *Does anything looks strange to you?*
+Finally we want to do some linear regression on our data to examine the influence on the `user_review`. Use the following code block to do such a linear regression for the influence of `year` on `user_review` and have a view in the results. *Does anything looks strange to you?*
 
 ```{r}
 summary(lm(user_review ~ year, data = data))
 ```
 
+The estimated value for `(Intercept)` seems a bit of. That has its origin in the fact that the smallest year in our data is 1995 and the intercept describes the value of `user_review` 'without' the influence of `year` (i.e. extrapolates the `user_review` for `year = 0`). This has no influence of the 'significance' of `year` but seems a bit odd. If you want you can use the next line to 'correct' this issue.
+
 ```{r}
-unique_games$years_since_1995 = unique_games$year - 1995
-summary(lm(score_mean ~ years_since_1995, data = unique_games))
+summary(lm(user_review ~ scale(year), data = data))
 ```
+
+As a next step we assume that `platform` has an influence on the `user_review`. Use the next line to examine that assumption. *What do you think?*
+
+```{r}
+summary(lm(user_review ~ platform, data = data))
+```
+
+There seems to be a lot of significant influence of the used `platform`. To make sure that we do not fall to a hidden link of variables use the next block to build a model that incorporates the influence of `year` and `platform` simultaneously on `user_review`.
+
+```{r}
+summary(lm(user_review ~ year + platform, data = data))
+```
+
+A lot of the former significant categories of `platform` are not longer significant. *Do you have a good explanation for this phenomena? Hint: Have a look into one of the graphics you created.*
 
 ## Questions
 
