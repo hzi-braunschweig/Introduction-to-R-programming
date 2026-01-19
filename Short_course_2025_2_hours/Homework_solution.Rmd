@@ -1,0 +1,181 @@
+---
+title: "Homework — Introduction to R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Instructions
+
+- Open this file in **RStudio**.
+- You do **not** need to know anything about R Markdown.
+- Run code chunks by clicking the green **► Run** button.
+- Write your answers directly in the code chunks.
+
+---
+
+# 1. Calculator and simple functions
+
+### Task 1
+Run the following calculations.  
+Then create **your own** calculation.
+
+```{r}
+345 + 5
+60/5*10
+abs(-12)
+```
+
+# Your own calculation:
+
+```{r}
+3*4/8+5
+2^2
+```
+
+
+# 2. Creating objects
+
+### Task 2
+
+Create an object x containing the number 42.
+Print it.
+Then add 10 to it and store it in an object y.
+
+```{r}
+x <- 42
+y <- x + 10
+```
+
+
+### Task 3
+
+Create a vector y with the following values:
+-3, -1, 0, 2, 4
+
+Then:
+
+Print y
+
+Apply the function abs() to y
+
+Calculate the mean of y
+
+
+```{r}
+y <- c(-3, -1, 0, 2, 4)
+print(y)
+y
+abs(y)
+mean(y)
+
+```
+
+
+
+# 3. Inspecting data frames
+
+We will use the built-in dataset mtcars.
+
+
+### Task 4
+
+Load mtcars and inspect its structure.
+
+```{r}
+# Load:
+data(mtcars)
+# Inspect:
+str(mtcars)
+
+```
+
+
+### Task 5
+
+Extract from mtcars:
+
+1. The second column
+
+2. The fifth row
+
+3. The value in row 3, column 4
+
+4. The column hp using $
+
+```{r}
+
+mtcars[,2]
+mtcars[5,]
+mtcars[3,4]
+mtcars$hp
+
+```
+
+
+# 4. Simple data wrangling with tidyverse
+
+We use the dataset iris.
+
+```{r}
+library(tidyverse)
+data(iris)
+```
+
+### Task 6
+
+Use filter() to extract all plants with sepal length (Sepal.Length) below / equal to 4.9.
+
+```{r}
+iris %>% filter(Sepal.Length <= 4.9)
+
+```
+
+
+### Task 7
+
+Extract all plants with a Petal Width of 0.2 AND belonging to Species Setosa. 
+```{r}
+iris %>% filter(Petal.Width == 0.2 & Species == "setosa")
+
+```
+
+
+### Task 8
+
+By using the pipe (%>%),
+- first create variables "Sepal.Length.mm", "Sepal.Width.mm", "Petal.Length.mm", "Petal.Width.mm";
+- by converting the values in the original variables that are in cm to mm;
+- afterwards select Species Setosa;
+- save the results in a new object with a reasonable name.
+ 
+```{r}
+iris_mm_setosa <- iris %>% 
+  mutate(Sepal.Length.mm = Sepal.Length*10,
+         Sepal.Width.mm = Sepal.Width*10,
+         Petal.Length.mm = Petal.Length*10,
+         Petal.Width.mm = Petal.Width*10) %>%
+  filter(Species == "setosa")
+
+```
+
+
+
+
+### Task 9
+
+Select the rows Petal.Length and Petal.Width from your last dataset by using a tidyverse function.
+To find the right function, use search machines or AI.
+Back in R, open the help page of the function with ?.
+
+```{r}
+?select
+
+iris_mm_setosa %>% select(Petal.Length, Petal.Width)
+
+```
+
+
+
