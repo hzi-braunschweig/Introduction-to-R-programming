@@ -13,9 +13,9 @@ Welcome to this introduction course to the programming language **R**. This cour
 
 ## The Usage of this Notebook
 
-We will use [**R Markdown**](http://rmarkdown.rstudio.com) **Notebooks** as a mean of teaching for this course. In general these notebooks consists of two different things.\
-On the one hand it consists of text blocks, like the one you are reading right now. They explain motivation, concepts and give background information for the things we are discussing.\
-On the other hand we have code chunks. These are areas where you can write and execute code. You can execute each chunk by clicking the *Run* button on the right side within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter* (for that purpose we recommend to use **RStudio** for working with this notebook). Have a try with the chunk below:
+We will use [**R Markdown**](http://rmarkdown.rstudio.com) **Notebooks** as a mean of teaching for this course. In general, these notebooks consist of two different things.\
+On the one hand, it consists of text blocks, like the one you are reading right now. They explain motivation, concepts and give background information for the things we are discussing.\
+On the other hand, we have code chunks. These are areas where you can write and execute code. You can execute each chunk by clicking the *Run* button on the right side within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter* (for that purpose we recommend to use **RStudio** for working with this notebook). Have a try with the chunk below:
 
 ```{r}
 print("Hello world!")
@@ -28,23 +28,23 @@ print("Hello world!")
 print("Hello user!")
 ```
 
-However we recommend to limit the number of lines of code for a better understanding.
+However, we recommend to limit the number of lines of code for a better understanding.
 
-We will use these code chunks to give executable examples and give the opportunity to play a bit around. Usually coding on your own and/or playing around with some code is the best way to become good at programming, therefore we highly recommend doing it.\
+We will use these code chunks to give executable examples and give the opportunity to play a bit around. Usually, coding on your own and/or playing around with some code is the best way to become good at programming, therefore we highly recommend doing it.\
 From time to time we will use the code chunks for small, not to complex, exercises.
 
 We hope you are now well prepared to follow and enjoy the upcoming course.
 
 ## Getting help
 
-Of course we can not learn everything about **R** via this lecture, since there are books filling the content of **R** and it is still being developed further. As mentioned the best way to learn programming (longterm) is by doing it and that also means learning new things on you own. That also requires options for looking for help if we have questions or are stuck some where.
+Of course we can not learn everything about **R** via this lecture, since there are books filling the content of **R** and it is still being developed further. As mentioned, the best way to learn programming (long-term) is by doing it and that also means learning new things on your own. That also requires options for looking for help if we have questions or are stuck somewhere.
 
 ### R help
 
 Quite often we will face functions in **R** without any idea of what they do or what arguments they need or what values they return or a combination of these questions. A quick way to get some information about a existing function is `help()` or its shortcut `?`.
 
 ```{r}
-?pinr
+?print
 ```
 
 -   **Description** - a brief description what the function does
@@ -623,7 +623,7 @@ adding(3)
 
 The Fibonacci numbers are a sequence of numbers that play a surprising role in a lot of natural systems. The sequence is defined by $F_{0} = 0$, $F_{1} = 1$ and $F_{n} = F_{n-2} + F_{n-1}$ for $n\geq2$.
 
-*Task*: Write a function that takes a natural number $n$ and returns the Fibonacci numbers til $F_{n}$. You could further:
+*Task*: Write a function that takes a natural number $n$ and returns the Fibonacci numbers till $F_{n}$. You could further:
 
 -   think about a good way returning the sequence,
 
